@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\app",
+    "\\common",
+    "\\model",
+    "\\view",
+    "\\viewmodel",
+    "\\window"
+  ],
+  "SelectedNode": "\\app\\app.cpp",
+  "PreviewInSolutionExplorer": false
+}
