@@ -1,15 +1,9 @@
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 environment:
   matrix:
     - arch: x64
       compiler: msvc2017
-    - arch: x86
-      compiler: msvc2017
-    - arch: x86
-      compiler: msvc2015
-    - arch: x64
-      compiler: msvc2015
 
 branches:
   only:
@@ -19,7 +13,7 @@ platform:
   - x64
 
 install:
-  - set QTDIR=C:\Qt\5.10.1\msvc2017_64
-  - set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw530_32\bin;%PATH%;
+  - set QTDIR=C:\Qt\5.14.2\msvc2017_64
+  - set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw730_64\bin;%PATH%;
 
 
