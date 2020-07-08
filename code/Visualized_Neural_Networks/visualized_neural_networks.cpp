@@ -17,7 +17,7 @@ Visualized_Neural_Networks::Visualized_Neural_Networks(QWidget *parent)
     setMouseTracking(true);
     ui.centralWidget->setMouseTracking(true);
 
-    QToolBar* tbar = addToolBar(tr("¹¤¾ßÀ¸"));
+    QToolBar* tbar = addToolBar(tr("select"));
     tbar->setMovable(false);
     tbar->setIconSize(QSize(24, 24));
     tbar->setStyleSheet("background-color:rgb(255,255,255)");

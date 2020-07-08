@@ -1,11 +1,10 @@
-#include "mainwindow.h"
-
-#include <QApplication>
+#include "visualized_neural_networks.h"
+#include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    Visualized_Neural_Networks w;
     w.show();
     return a.exec();
 }

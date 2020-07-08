@@ -17,13 +17,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    neurons.cpp \
+    visualized_neural_networks.cpp
 
 HEADERS += \
-    mainwindow.h
+    neurons.h \
+    resource.h \
+    visualized_neural_networks.h \
+    weights.h
 
 FORMS += \
-    mainwindow.ui
+    visualized_neural_networks.ui
 
 TRANSLATIONS += \
     Visualized_Neural_Networks_zh_CN.ts

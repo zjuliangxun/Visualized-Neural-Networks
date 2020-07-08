@@ -1,13 +1,14 @@
-image: Visual Studio 2019
+version: 1.0.{build}
 
 environment:
   matrix:
-    - arch: x64
-      compiler: msvc2017
+    - name: win64
+      platform: amd64
+      qt: msvc2017
 
 branches:
   only:
-    - temp
+    - testCI
 
 platform:
   - x64
@@ -16,10 +17,8 @@ install:
   - set QTDIR=C:\Qt\5.14.2\msvc2017_64
   - set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw730_64\bin;%PATH%;C:\MinGW\bin
 
-# before_build:
-#   - qmake -r
-
 build_script:
-  - nmake
+  - qmake Visualized_Neural_Networks.pro
+  - nmake & exit 0
 
 
