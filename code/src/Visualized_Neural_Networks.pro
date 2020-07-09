@@ -23,6 +23,8 @@ SOURCES += \
     main.cpp \
     model/NetModel.cpp \
     view/NetView.cpp \
+    view/NetViewItems.cpp \
+    view/utils.cpp \
     viewmodel/NetViewModel.cpp
 
 HEADERS += \
@@ -33,6 +35,8 @@ HEADERS += \
     common/weights.h \
     model/NetModel.h \
     view/NetView.h \
+    view/NetViewItems.h \
+    view/utils.h \
     viewmodel/NetViewModel.h
 
 FORMS += \

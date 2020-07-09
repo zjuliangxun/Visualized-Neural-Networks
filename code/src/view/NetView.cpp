@@ -1,27 +1,26 @@
 #include "NetView.h"
 #include "ui_NetView.h"
 #include <QPair>
+#include "utils.h"
+#include <cmath>
 
 /* auxiliary functions */
 static int _radius = 16;
-QRect newQRect(QPoint, int);
-bool conflict(const QRect &lhs, const QRect &rhs);
 
 /* View Definition */
 NetView::NetView(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::NetView)
 {
+    /* display basic UI */
     ui->setupUi(this);
     resize(800, 600);
     setWindowTitle("Visualized Neural Networks");
 
     setMouseTracking(true);
     ui->centralwidget->setMouseTracking(true);
-    ui->graphicsView->setMouseTracking(true);
-    ui->graphicsView->resize(800, 600);
-    ui->graphicsView->hide();
 
+    /* display tool bar */
     QToolBar* tbar = addToolBar(tr("Tool Bar"));
     tbar->setMovable(false);
     tbar->setIconSize(QSize(24, 24));
@@ -51,6 +50,30 @@ NetView::NetView(QWidget* parent)
     addNeuronTargetAction->setIcon(QIcon(":/images/neuron_target.png"));
     tbar->addAction(addNeuronTargetAction);
 
+    /* display board */
+//    graphicsScene = new QGraphicsScene(this);
+//    graphicsView = new QGraphicsView(graphicsScene, this);
+//    graphicsView->setMouseTracking(true);
+//    graphicsView->setInteractive(true);
+//    graphicsView->setFixedSize(this->width(), this->height() - ui->menubar->height() - tbar->height());
+//    graphicsView->move(0, ui->menubar->height() + tbar->height());
+//    graphicsView->setStyleSheet("padding: 0px; border: 0px");
+
+//    Neuron tmp;
+//    tmp._value = 0.0;
+//    tmp.type = nTarget;
+
+//    QGraphicsItem *newitem = new NeuronItem(tmp, QPointF(100, 100));
+//    //QLineF line();
+//    //QGraphicsItem *tmptem = new QGraphicsLineItem(&line);
+//    newitem->show();
+//    newitem->setActive(true);
+//    newitem->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+//    graphicsScene->addLine(0, 0, 100, 100);
+//    graphicsScene->addItem(newitem);
+//    graphicsView->update();
+//    delete newitem;
+
 
     // signal-slots connection
     connect(selectAction, SIGNAL(triggered()), this, SLOT(select_button_clicked()));
@@ -69,6 +92,8 @@ NetView::NetView(QWidget* parent)
 NetView::~NetView()
 {
     delete ui;
+    delete graphicsView;
+    delete graphicsScene;
 }
 
 
@@ -83,12 +108,24 @@ std::shared_ptr <NetViewModel > NetView::detach_ViewModel() noexcept {
 	return std::shared_ptr <NetViewModel >(std::move(m_NetVM));
 }
 
+void NetView::paintNeurons(QPixmap* map)
+{
+    QPainter painter(map);
+
+    painter.end();
+}
+void NetView::paintWeights(QPixmap* map)
+{
+    QPainter painter(map);
+
+    painter.end();
+}
 void NetView::paintEvent(QPaintEvent*)
 {
+
     QPixmap map(size());
     map.fill(Qt::white);
     QPainter painter(&map);
-
     if (edit_mode == addNeuron) {
         switch (current_neuron.type) {
         case nNone:
@@ -134,20 +171,41 @@ void NetView::paintEvent(QPaintEvent*)
         }
         painter.drawEllipse(shape_neurons.at(i));
         if (this->FNN->_neurons.at(i).type == nTarget) {
-            QRect outer = shape_neurons.at(i);
-            outer.setTopLeft(QPoint(outer.left() - 3, outer.top() - 3));
-            outer.setBottomRight(QPoint(outer.right() + 3, outer.bottom() + 3));
+            QRectF outer = shape_neurons.at(i);
+            outer.setTopLeft(QPointF(outer.left() - 3, outer.top() - 3));
+            outer.setBottomRight(QPointF(outer.right() + 3, outer.bottom() + 3));
             painter.drawEllipse(outer);
         }
         if (selected_neuron == this->FNN->_neurons.at(i).id) {
-            QRect outer = shape_neurons.at(i);
-            outer.setTopLeft(QPoint(outer.left() - 4, outer.top() - 4));
-            outer.setBottomRight(QPoint(outer.right() + 4, outer.bottom() + 4));
+            QRectF outer = shape_neurons.at(i);
+            outer.setTopLeft(QPointF(outer.left() - 4, outer.top() - 4));
+            outer.setBottomRight(QPointF(outer.right() + 4, outer.bottom() + 4));
             painter.drawRect(outer);
         }
     }
+    //painter.end();
+
+    for (int i = 0; i != shape_weights.size(); ++i) {
+        QPointF p1, p2;
+        for (int j = 0; j != shape_weights.size(); ++j) {
+            if (this->FNN->_neurons.at(i).id == shape_weights.at(i).first)
+                p1 = shape_neurons.at(i).center();
+            if (this->FNN->_neurons.at(i).id == shape_weights.at(i).second)
+                p2 = shape_neurons.at(i).center();
+        }
+        QPointF dp = p2 - p1;
+        double l = sqrt(dp.x() * dp.x() + dp.y() * dp.y());
+        p1.setX(p1.x() + dp.x() * _radius / l);
+        p1.setY(p1.y() + dp.y() * _radius / l);
+        p2.setX(p1.x() - dp.x() * _radius / l);
+        p2.setY(p1.y() - dp.y() * _radius / l);
+        painter.drawLine(QLineF(p1, p2));
+    }
+    if (drag_mode == lineDrag)
+        painter.drawLine(shape_current_weight);
 
     painter.end();
+    //
     painter.begin(this);
     painter.drawPixmap(0, 0, map);
 }
@@ -157,8 +215,8 @@ void NetView::mousePressEvent(QMouseEvent *e)
         if (edit_mode == selectNeuron) {
             bool select_one = false;
             for (int i = 0; i != this->FNN->_neurons.size(); ++i) {
-                QPoint old_c = shape_neurons.at(i).center();
-                QPoint new_c(e->pos());
+                QPointF old_c = shape_neurons.at(i).center();
+                QPointF new_c(e->pos());
                 int dx = old_c.x() - new_c.x();
                 int dy = old_c.y() - new_c.y();
                 if (dx * dx + dy * dy <= _radius * _radius) {
@@ -172,6 +230,18 @@ void NetView::mousePressEvent(QMouseEvent *e)
             if (!select_one) {
                 drag_mode = noDrag;
                 selected_neuron = -1;
+            }
+        }
+    }
+    else if (e->button() == Qt::RightButton) {
+        if (edit_mode == selectNeuron) {
+            if (selected_neuron != -1) {
+                drag_mode = lineDrag;
+                for (int i = 0; i != this->FNN->_neurons.size(); ++i) {
+                    if (this->FNN->_neurons.at(i).id == selected_neuron)
+                        shape_current_weight.setP1(e->pos());
+                }
+                shape_current_weight.setP2(e->pos());
             }
         }
     }
@@ -189,21 +259,17 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
         }
         else if (edit_mode == addNeuron) {
             Neuron x;
-            QRect shape_x;
+            QRectF shape_x;
             x.isleaf = 1;
             x.type = current_neuron.type;
             x._value = 0.0;
             int flag = true;
             for (int i = 0; i != this->FNN->_neurons.size() && flag; ++i) {
-                QPoint old_c = shape_neurons.at(i).center();
-                QPoint new_c(e->pos());
-                int dx = old_c.x() - new_c.x();
-                int dy = old_c.y() - new_c.y();
-                if (dx * dx + dy * dy <= 4 * _radius * _radius)
+                if (conflict(e->pos(), shape_neurons.at(i)))
                     flag = false;
             }
             if (flag) {
-                shape_x = newQRect(e->pos(), _radius);
+                shape_x = newQRectF(e->pos(), _radius);
             }
 
             bool add_success = add_neuron_command(x);  // with return falue
@@ -211,6 +277,23 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
                 shape_neurons.append(shape_x);
             }
         }
+    }
+    else if (e->button() == Qt::RightButton) {
+        if (edit_mode == selectNeuron) {
+            for (int i = 0; i != this->FNN->_neurons.size(); ++i) {
+                if (isinside(e->pos(), shape_neurons.at(i))) {
+                    QPair<int, int> param(selected_neuron, this->FNN->_neurons.at(i).id);
+                    bool connect_success = connect_command(param);
+                    if (connect_success) {
+                        selected_neuron = -1;
+                        drag_mode = noDrag;
+                        shape_weights.append(param);
+                    }
+                    break;
+                }
+            }
+        }
+
     }
     update();
 }
@@ -220,7 +303,7 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
 //}
 void NetView::mouseMoveEvent(QMouseEvent* e)
 {
-    shape_current_neuron = newQRect(e->pos(), _radius);
+    shape_current_neuron = newQRectF(e->pos(), _radius);
 
     if (drag_mode == canDrag) {
         shape_current_neuron.moveCenter(e->pos());
@@ -238,6 +321,9 @@ void NetView::mouseMoveEvent(QMouseEvent* e)
                 }
             }
         }
+    }
+    else if (drag_mode == lineDrag) {
+        shape_current_weight.setP2(e->pos());
     }
 
     update();
@@ -295,20 +381,3 @@ void NetView::target_button_clicked()
     update();
 }
 
-QRect newQRect(QPoint center, int radius)
-{
-    QPoint upper_left(center), lower_right(center);
-    upper_left.setX(upper_left.x() - radius);
-    upper_left.setY(upper_left.y() - radius);
-    lower_right.setX(lower_right.x() + radius);
-    lower_right.setY(lower_right.y() + radius);
-    return QRect(upper_left, lower_right);
-}
-bool conflict(const QRect &lhs, const QRect &rhs)
-{
-    QPoint center = lhs.center();
-    QPoint new_center = rhs.center();
-    int dx = new_center.x() - center.x();
-    int dy = new_center.y() - center.y();
-    return (dx * dx + dy * dy <= 4 * _radius * _radius);
-}
