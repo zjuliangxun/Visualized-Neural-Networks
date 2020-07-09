@@ -5,7 +5,7 @@
 #include <cmath>
 
 /* auxiliary functions */
-static int _radius = 16;
+static int _radius = 24;
 
 /* View Definition */
 NetView::NetView(QWidget* parent)
@@ -187,19 +187,23 @@ void NetView::paintEvent(QPaintEvent*)
 
     for (int i = 0; i != shape_weights.size(); ++i) {
         QPointF p1, p2;
-        for (int j = 0; j != shape_weights.size(); ++j) {
-            if (this->FNN->_neurons.at(i).id == shape_weights.at(i).first)
-                p1 = shape_neurons.at(i).center();
-            if (this->FNN->_neurons.at(i).id == shape_weights.at(i).second)
-                p2 = shape_neurons.at(i).center();
+        for (int j = 0; j != this->FNN->_neurons.size(); ++j) {
+            if (this->FNN->_neurons.at(j).id == shape_weights.at(i).first)
+                p1 = shape_neurons.at(j).center();
+            if (this->FNN->_neurons.at(j).id == shape_weights.at(i).second)
+                p2 = shape_neurons.at(j).center();
         }
-        QPointF dp = p2 - p1;
+        QPointF dp;
+        dp.setX(p2.x() - p1.x());
+        dp.setY(p2.y() - p1.y());
         double l = sqrt(dp.x() * dp.x() + dp.y() * dp.y());
         p1.setX(p1.x() + dp.x() * _radius / l);
         p1.setY(p1.y() + dp.y() * _radius / l);
-        p2.setX(p1.x() - dp.x() * _radius / l);
-        p2.setY(p1.y() - dp.y() * _radius / l);
+        p2.setX(p2.x() - dp.x() * _radius / l);
+        p2.setY(p2.y() - dp.y() * _radius / l);
         painter.drawLine(QLineF(p1, p2));
+        painter.drawRect(newQRectF(p1, 3));
+        painter.drawEllipse(newQRectF(p2, 3));
     }
     if (drag_mode == lineDrag)
         painter.drawLine(shape_current_weight);
@@ -279,19 +283,22 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
         }
     }
     else if (e->button() == Qt::RightButton) {
-        if (edit_mode == selectNeuron) {
+        if (edit_mode == selectNeuron && drag_mode == lineDrag) {
+            bool inone = false;
             for (int i = 0; i != this->FNN->_neurons.size(); ++i) {
                 if (isinside(e->pos(), shape_neurons.at(i))) {
                     QPair<int, int> param(selected_neuron, this->FNN->_neurons.at(i).id);
-                    bool connect_success = connect_command(param);
+//                    bool connect_success = connect_command(param);
+                    bool connect_success = (param.first != param.second);
                     if (connect_success) {
-                        selected_neuron = -1;
-                        drag_mode = noDrag;
                         shape_weights.append(param);
                     }
+                    inone = true;
                     break;
                 }
             }
+            drag_mode = noDrag;
+            selected_neuron = -1;
         }
 
     }
