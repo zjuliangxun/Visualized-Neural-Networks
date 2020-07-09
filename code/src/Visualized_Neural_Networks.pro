@@ -2,7 +2,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++17
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -16,18 +16,27 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    app/app.cpp \
+    common/Common.cpp \
+    common/Graph.cpp \
+    common/neurons.cpp \
     main.cpp \
-    neurons.cpp \
-    visualized_neural_networks.cpp
+    model/NetModel.cpp \
+    view/NetView.cpp \
+    viewmodel/NetViewModel.cpp
 
 HEADERS += \
-    neurons.h \
-    resource.h \
-    visualized_neural_networks.h \
-    weights.h
+    app/app.h \
+    common/Common.h \
+    common/Graph.h \
+    common/neurons.h \
+    common/weights.h \
+    model/NetModel.h \
+    view/NetView.h \
+    viewmodel/NetViewModel.h
 
 FORMS += \
-    visualized_neural_networks.ui
+    view/NetView.ui
 
 TRANSLATIONS += \
     Visualized_Neural_Networks_zh_CN.ts
@@ -36,3 +45,6 @@ TRANSLATIONS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    Visualized_Neural_Networks.qrc
