@@ -10,10 +10,10 @@ platform:
   - x64
 
 install:
-  - set QTDIR=C:\Qt\5.14.2\mingw73_64
-  - set PATH=%PATH%,%QTDIR%\bin,C:MinGW\bin
+  - cmd: set QTDIR=C:\Qt\5.14.2\mingw73_64
+  - cmd: set PATH=%PATH%,%QTDIR%\bin,C:MinGW\bin
 
 build_script:
-  - qmake code\src\Visualized_Neural_Networks.pro
-  - mingw32-make
+  - cmd: qmake code\src\Visualized_Neural_Networks.pro
+  - cmd: mingw32-make
 # -makefile -o code\build-Visualized_Neural_Networks-Desktop_Qt_5_14_2_MinGW_64_bit-Debug\Makefile 
