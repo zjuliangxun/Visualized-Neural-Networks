@@ -2,15 +2,16 @@
 #define APP_H
 
 #include <memory>
-#include "view.h"
-#include "model.h"
-#include "viewmodel.h"
+#include "../view/NetView.h"
+#include "../model/NetModel.h"
+#include "../viewmodel/NetViewModel.h"
 
-class APP {
+class App {
 private:
-	std::shared_ptr<View> view;
-	std::shared_ptr<Model> model;
-	std::shared_ptr<ViewModel> viewmodel;
+	//must not be pointers
+	NetView view;
+	NetModel model;
+	NetViewModel viewmodel;
 public:
 	App();
 	void run();

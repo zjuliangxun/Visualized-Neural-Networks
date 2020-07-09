@@ -2,13 +2,12 @@
 #ifndef WEIGHTS_H
 #define WEIGHTS_H
 
-#include <QSharedPointer>
 #include "neurons.h"
 
 class Weight {
 public:
-	QSharedPointer<Neuron> _from, _to;
-	double _weight;
+	int _from, _to;	// edge (from, to), IDs of vertices (Neurons)
+	double _weight, _gradient;	// weight and gradient with respect of
 };
 
 #endif // !WEIGHTS_H
