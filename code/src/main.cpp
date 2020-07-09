@@ -1,10 +1,10 @@
-#include "vnn.h"
 #include <QtWidgets/QApplication>
+#include "./app/app.h"
 
 int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
-    Vnn w;
-    w.show();
+    App aps;
+    aps.run();
     return a.exec();
 }

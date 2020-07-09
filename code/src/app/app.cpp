@@ -1,21 +1,24 @@
 #include "app.h"
 
-App::App(): view(new View), model(new Model), viewmodel(new ViewModel)
+App::App()
 {
-	viewmodel->bind(model);
-	
-	view->set_neurons(viewmodel->get_neurons());
-	view->set_weights(viewmodel->get_weights());
+	viewmodel.attach_Model(std::shared_ptr<NetModel>(&this->model));//bind model
+	view.attach_ViewModel(std::shared_ptr<NetViewModel>(&this->viewmodel));
 
-	view->set_select_command(viewmodel->get_select_command());
-	view->set_add_none_command(viewmodel->get_add_none_command());
-	view->set_add_sigmoid_command(viewmodel->get_add_sigmoid_command());
-	view->set_add_relu_command(viewmodel->get_add_relu_command());
-	view->set_add_tanh_command(viewmodel->get_add_tanh_command());
-	view->set_drag_command(viewmodel->get_drag_command);
-	view->set_connect_command(viewmodel->get_connect_command);
+	//bind view
+    view.set_FNN(viewmodel.get_FNN());
 
-	viewmodel->set_update_view_notification(view->get_update_view_notification);
+    view.set_add_neuron_command(viewmodel.get_add_neuron_command());
+//	view.set_connect_command(viewmodel.get_connect_command());
 
-	model->set_update_display_data_notification(viewmodel->get_update_display_data_notification);
+	// viewmodel
+	viewmodel.AddNotification(view.tell_update_view_notification());//add notification
+
+	//model
+	model.AddNotification(viewmodel.get_Notification());//add notification
+	//!!!!!!!!need to transfer to left value
+}
+
+void App::run() {
+	view.show();
 }
