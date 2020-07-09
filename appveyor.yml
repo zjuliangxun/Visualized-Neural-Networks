@@ -15,5 +15,6 @@ install:
 
 build_script:
   - qmake -makefile -o code\build-Visualized_Neural_Networks-Desktop_Qt_5_14_2_MinGW_64_bit-Debug\Makefile code\src\Visualized_Neural_Networks.pro
-  - mingw64-make
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+  
 # -makefile -o code\build-Visualized_Neural_Networks-Desktop_Qt_5_14_2_MinGW_64_bit-Debug\Makefile 
