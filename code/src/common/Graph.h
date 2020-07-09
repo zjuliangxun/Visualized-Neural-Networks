@@ -12,7 +12,6 @@ private:
     int _neuron_id;
     int _weight_id;
 public:
-    Graph(): _neuron_id(0), _weight_id(0) {}
 	QVector<Neuron> _neurons;
 	QVector<Weight> _weights;
     bool add_neuron(Neuron&&);

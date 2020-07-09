@@ -272,7 +272,6 @@ debug/moc_NetView.cpp: ../src/view/NetView.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtGui/qtextformat.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtGui/qpen.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QVector \
-		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QPair \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QGraphicsItem \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/qgraphicsitem.h \
 		../src/viewmodel/NetViewModel.h \
@@ -784,7 +783,6 @@ debug/app.o: ../src/app/app.cpp ../src/app/app.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtGui/qtextformat.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtGui/qpen.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QVector \
-		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QPair \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QGraphicsItem \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/qgraphicsitem.h \
 		../src/viewmodel/NetViewModel.h \
@@ -1370,7 +1368,6 @@ debug/main.o: ../src/main.cpp C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtGui/qtextformat.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtGui/qpen.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QVector \
-		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QPair \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QGraphicsItem \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/qgraphicsitem.h \
 		../src/viewmodel/NetViewModel.h \
@@ -2330,7 +2327,6 @@ debug/NetView.o: ../src/view/NetView.cpp ../src/view/NetView.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtGui/qtextformat.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtGui/qpen.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QVector \
-		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QPair \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QGraphicsItem \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/qgraphicsitem.h \
 		../src/viewmodel/NetViewModel.h \
@@ -2697,6 +2693,13 @@ debug/NetView.o: ../src/view/NetView.cpp ../src/view/NetView.h \
 		../src/view/NetViewItems.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QGraphicsEllipseItem \
 		ui_NetView.h \
+		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QAction \
+		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QApplication \
+		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QGraphicsView \
+		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QMenu \
+		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QMenuBar \
+		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QStatusBar \
+		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QPair \
 		../src/view/utils.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QRectF
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\NetView.o ..\src\view\NetView.cpp
@@ -2788,7 +2791,6 @@ debug/NetViewItems.o: ../src/view/NetViewItems.cpp C:/Qt/Qt5.14.2/5.14.2/mingw73
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtGui/qfont.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtGui/qfontmetrics.h \
 		../src/view/NetViewItems.h \
-		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtCore/QObject \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/QGraphicsItem \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/qgraphicsitem.h \
 		C:/Qt/Qt5.14.2/5.14.2/mingw73_64/include/QtWidgets/qtwidgetsglobal.h \
