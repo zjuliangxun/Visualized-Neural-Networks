@@ -1,5 +1,8 @@
 version: 1.0.{build}
 
+image:
+  Visual Studio 2019
+
 environment:
   matrix:
     - name: win64
@@ -13,12 +16,9 @@ branches:
 platform:
   - x64
 
-install:
-  - set QTDIR=C:\Qt\5.14.2\msvc2017_64
-  - set PATH=%QTDIR%\bin;C:\Qt\Tools\mingw730_64\bin;%PATH%;C:\MinGW\bin
-
 build_script:
-  - qmake code\Visualized_Neural_Networks\Visualized_Neural_Networks.pro
-  - nmake & exit 0
+  - cmd: set PATH=C:\Qt\5.14.2\msvc2017_64\bin;%PATH%
+  - cmd: call C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvar64.bat"
+  - cmd: qmake -makefile -o code\build-Visualized_Neural_Networks-Desktop_Qt_5_14_2_MinGW_64_bit-Debug\Makefile code\src\Visualized_Neural_Networks.pro
 
 
