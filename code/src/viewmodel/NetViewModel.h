@@ -18,7 +18,7 @@ public:
 
     //GET COMANDS
     Command get_add_neuron_command();
-//	Command get_connect_command();
+    Command get_connect_command();
 
 	//EXPOSE ATTR
     std::shared_ptr<Graph> get_FNN();
