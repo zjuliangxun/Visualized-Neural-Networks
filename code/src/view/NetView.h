@@ -81,8 +81,6 @@ private:
 
     // display modules
     Ui::NetView *ui;
-    QGraphicsView *graphicsView;
-    QGraphicsScene *graphicsScene;
 
     // interbal functions;
     void paintNeurons(QPixmap*);

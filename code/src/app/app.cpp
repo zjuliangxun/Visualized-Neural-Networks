@@ -13,7 +13,7 @@ App::App()
     view->set_FNN(viewmodel->get_FNN());
 
     view->set_add_neuron_command(viewmodel->get_add_neuron_command());
-//	view->set_connect_command(viewmodel->get_connect_command());
+    view->set_connect_command(viewmodel->get_connect_command());
 
 	// viewmodel
     viewmodel->AddNotification(view->tell_update_view_notification());//add notification
