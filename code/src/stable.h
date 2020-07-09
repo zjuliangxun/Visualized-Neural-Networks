@@ -1,0 +1,12 @@
+#include <iostream>
+#include <QtCore>
+#include <QtGui>
+#include <QtWidgets/QtWidgets>
+#include <memory>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QTextEdit>
+#include <QtCore/QVector>
+#include <QPair>
+#include <QGraphicsItem>
+#include <QObject>
+#include <QGraphicsEllipseItem>

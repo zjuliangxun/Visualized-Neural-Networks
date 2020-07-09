@@ -12,9 +12,11 @@ private:
     int _neuron_id;
     int _weight_id;
 public:
+    QVector<int> edges;
 	QVector<Neuron> _neurons;
 	QVector<Weight> _weights;
     bool add_neuron(Neuron&&);
+    bool add_link(Weight && wigh);
 };
 
 #endif // !GRAPH_H

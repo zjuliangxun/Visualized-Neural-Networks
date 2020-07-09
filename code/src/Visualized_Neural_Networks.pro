@@ -3,6 +3,7 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
+CONFIG += precompile_header 
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -15,6 +16,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+PRECOMPILED_HEADER = stable.h
+
 SOURCES += \
     app/app.cpp \
     common/Common.cpp \
@@ -23,9 +26,12 @@ SOURCES += \
     main.cpp \
     model/NetModel.cpp \
     view/NetView.cpp \
+    view/NetViewItems.cpp \
+    view/utils.cpp \
     viewmodel/NetViewModel.cpp
 
 HEADERS += \
+    stable.h \
     app/app.h \
     common/Common.h \
     common/Graph.h \
@@ -33,6 +39,8 @@ HEADERS += \
     common/weights.h \
     model/NetModel.h \
     view/NetView.h \
+    view/NetViewItems.h \
+    view/utils.h \
     viewmodel/NetViewModel.h
 
 FORMS += \

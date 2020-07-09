@@ -9,11 +9,12 @@
 class App {
 private:
 	//must not be pointers
-	NetView view;
-	NetModel model;
-	NetViewModel viewmodel;
+    shared_ptr<NetView> view;
+    shared_ptr<NetModel> model;
+    shared_ptr<NetViewModel> viewmodel;
 public:
 	App();
+    ~App();
 	void run();
 };
 
