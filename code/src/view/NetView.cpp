@@ -48,7 +48,7 @@ NetView::NetView(QWidget* parent)
     tbar->addAction(addNeuronTanhAction);
 
     QAction* addNeuronTargetAction = new QAction(tr("&Target"), this);
-    addNeuronTargetAction->setIcon(QIcon(":/images/neuron_Target.png"));
+    addNeuronTargetAction->setIcon(QIcon(":/images/neuron_target.png"));
     tbar->addAction(addNeuronTargetAction);
 
 
@@ -89,42 +89,46 @@ void NetView::paintEvent(QPaintEvent*)
     map.fill(Qt::white);
     QPainter painter(&map);
 
+    if (edit_mode == addNeuron) {
+        switch (current_neuron.type) {
+        case nNone:
+            painter.setPen(QPen(Qt::black, 1));
+            break;
+        case nSigmoid:
+            painter.setPen(QPen(Qt::darkRed, 1));
+            break;
+        case nRelu:
+            painter.setPen(QPen(Qt::darkGreen, 1));
+            break;
+        case nTanh:
+            painter.setPen(QPen(Qt::darkBlue, 1));
+            break;
+        case nTarget:
+            painter.setPen(QPen(Qt::black, 1));
+            break;
+        default:
+            painter.setPen(QPen(Qt::black, 1));
+            break;
+        }
+        painter.drawEllipse(shape_current_neuron);
+    }
+
     for (int i = 0; i != shape_neurons.size(); ++i) {
         switch (this->FNN->_neurons.at(i).type)
         {
         case nSigmoid:
-            if (edit_mode == addNeuron) {
-                painter.setPen(QPen(Qt::darkRed, 1));
-                painter.drawEllipse(shape_current_neuron);
-            }
             painter.setPen(QPen(Qt::darkRed, 2));
             break;
         case nRelu:
-            if (edit_mode == addNeuron) {
-                painter.setPen(QPen(Qt::darkGreen, 1));
-                painter.drawEllipse(shape_current_neuron);
-            }
             painter.setPen(QPen(Qt::darkGreen, 2));
             break;
         case nTanh:
-            if (edit_mode == addNeuron) {
-                painter.setPen(QPen(Qt::darkBlue, 1));
-                painter.drawEllipse(shape_current_neuron);
-            }
             painter.setPen(QPen(Qt::darkBlue, 2));
             break;
         case nTarget:
-            if (edit_mode == addNeuron) {
-                painter.setPen(QPen(Qt::black, 1));
-                painter.drawEllipse(shape_current_neuron);
-            }
             painter.setPen(QPen(Qt::black, 2));
             break;
         default:
-            if (edit_mode == addNeuron) {
-                painter.setPen(QPen(Qt::black, 1));
-                painter.drawEllipse(shape_current_neuron);
-            }
             painter.setPen(QPen(Qt::black, 2));
             break;
         }
@@ -135,7 +139,7 @@ void NetView::paintEvent(QPaintEvent*)
             outer.setBottomRight(QPoint(outer.right() + 3, outer.bottom() + 3));
             painter.drawEllipse(outer);
         }
-        if (selected_neurons.at(i)) {
+        if (selected_neuron == this->FNN->_neurons.at(i).id) {
             QRect outer = shape_neurons.at(i);
             outer.setTopLeft(QPoint(outer.left() - 4, outer.top() - 4));
             outer.setBottomRight(QPoint(outer.right() + 4, outer.bottom() + 4));
@@ -158,20 +162,14 @@ void NetView::mousePressEvent(QMouseEvent *e)
                 int dx = old_c.x() - new_c.x();
                 int dy = old_c.y() - new_c.y();
                 if (dx * dx + dy * dy <= _radius * _radius) {
-                    selected_neurons.replace(i, true);
-                    if (selected_neuron == i)
+                    if (selected_neuron == this->FNN->_neurons.at(i).id)
                         drag_mode = canDrag;
                     else
-                        selected_neuron = i;
+                        selected_neuron = this->FNN->_neurons.at(i).id;
                     select_one = true;
                 }
-                else
-                    selected_neurons.replace(i, false);
             }
-            if (select_one) {
-
-            }
-            else {
+            if (!select_one) {
                 drag_mode = noDrag;
                 selected_neuron = -1;
             }
@@ -185,7 +183,7 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
     if (e->button() == Qt::LeftButton) {
         if (edit_mode == selectNeuron) {
             for (int i = 0; i != this->FNN->_neurons.size(); ++i) {
-                if (selected_neurons.at(i) && i == selected_neuron)
+                if (this->FNN->_neurons.at(i).id == selected_neuron)
                     drag_mode = preDrag;
             }
         }
@@ -210,7 +208,6 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
 
             bool add_success = add_neuron_command(x);  // with return falue
             if (add_success) {
-                selected_neurons.append(false);
                 shape_neurons.append(shape_x);
             }
         }
@@ -229,12 +226,17 @@ void NetView::mouseMoveEvent(QMouseEvent* e)
         shape_current_neuron.moveCenter(e->pos());
         int no_conflict = true;
         for (int i = 0; i != shape_neurons.size() && no_conflict; ++i) {
-            if (i != selected_neuron &&
+            if (this->FNN->_neurons.at(i).id != selected_neuron &&
                 conflict(shape_current_neuron, shape_neurons.at(i)))
                 no_conflict = false;
         }
         if (no_conflict) {
-            shape_neurons.replace(selected_neuron, shape_current_neuron);
+            for (int i = 0; i != shape_neurons.size(); ++i) {
+                if (this->FNN->_neurons.at(i).id == selected_neuron) {
+                    shape_neurons.replace(i, shape_current_neuron);
+                    break;
+                }
+            }
         }
     }
 
@@ -261,8 +263,6 @@ void NetView::neuron_button_clicked()
 {
     current_neuron.type = nNone;
     edit_mode = addNeuron;
-    if (selected_neuron != -1)
-        selected_neurons.replace(selected_neuron, false);
     selected_neuron = -1;
     update();
 }
@@ -270,8 +270,6 @@ void NetView::sigmoid_button_clicked()
 {
     current_neuron.type = nSigmoid;
     edit_mode = addNeuron;
-    if (selected_neuron != -1)
-        selected_neurons.replace(selected_neuron, false);
     selected_neuron = -1;
     update();
 }
@@ -279,8 +277,6 @@ void NetView::relu_button_clicked()
 {
     current_neuron.type = nRelu;
     edit_mode = addNeuron;
-    if (selected_neuron != -1)
-        selected_neurons.replace(selected_neuron, false);
     selected_neuron = -1;
     update();
 }
@@ -288,8 +284,6 @@ void NetView::tanh_button_clicked()
 {
     current_neuron.type = nTanh;
     edit_mode = addNeuron;
-    if (selected_neuron != -1)
-        selected_neurons.replace(selected_neuron, false);
     selected_neuron = -1;
     update();
 }
@@ -297,8 +291,6 @@ void NetView::target_button_clicked()
 {
     current_neuron.type = nTarget;
     edit_mode = addNeuron;
-    if (selected_neuron != -1)
-        selected_neurons.replace(selected_neuron, false);
     selected_neuron = -1;
     update();
 }

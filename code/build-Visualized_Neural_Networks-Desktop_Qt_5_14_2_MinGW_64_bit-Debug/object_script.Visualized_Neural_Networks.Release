@@ -1,0 +1,10 @@
+release/app.o
+release/Common.o
+release/Graph.o
+release/neurons.o
+release/main.o
+release/NetModel.o
+release/NetView.o
+release/NetViewModel.o
+release/qrc_Visualized_Neural_Networks.o
+release/moc_NetView.o

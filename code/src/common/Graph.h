@@ -8,6 +8,9 @@
 #include "weights.h"
 
 class Graph {
+private:
+    int _neuron_id;
+    int _weight_id;
 public:
 	QVector<Neuron> _neurons;
 	QVector<Weight> _weights;
