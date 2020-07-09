@@ -7,7 +7,7 @@ platform:
 
 install:
   - set QTDIR=C:\Qt\5.14.2\mingw73_64
-  - set PATH=%PATH%;%QTDIR%\bin;C:MinGW\bin;C:\Qt\5.14.2\Tools
+  - set PATH=%PATH%;%QTDIR%\bin;C:MinGW\bin;C:\Qt\5.14.2\Tools\mingw73_64\bin
 
 build_script:
   - qmake -o Makefile code\src\Visualized_Neural_Networks.pro

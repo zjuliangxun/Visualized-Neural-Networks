@@ -33,5 +33,13 @@ std::function<bool(int,int)>  NetModel::get_connect_command(){
 }
 
 bool NetModel::add_link(int src,int dst){
-    return true;
+    if(src==dst) return false;
+    int i;
+    for(i=0;i<this->FNN->_weights.size();i++){
+        if(src==this->FNN->_weights[i]._from&&dst==this->FNN->_weights[i]._to) return false;
+    }
+    Weight w;
+    w._from=src;
+    w._to=dst;
+    return this->FNN->add_link(std::move(w));
 }
