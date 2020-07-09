@@ -37,3 +37,10 @@ std::shared_ptr<NetModel> NetViewModel::detach_Model() noexcept
     return tmp_ptr;
 }
 
+Command NetViewModel::get_connect_command(){
+    return [this](std::any t)->bool{
+        QPair<int,int> g=std::any_cast<QPair<int,int>>(t);
+        return this->m_NetM->add_link(g.first,g.second);
+    };
+}
+
