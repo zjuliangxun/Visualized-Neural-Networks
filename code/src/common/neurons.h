@@ -2,21 +2,28 @@
 
 #ifndef NEURONS_H
 #define NEURONS_H
-
+#include <list>
 enum NeuronType {
 	nNone, nSigmoid, nRelu, nTanh, nTarget
 };
 
+enum NodeType {
+    nInput, nOutput, nHidden
+};
+
 class Neuron {
 public:
-	double _value;
+
 	NeuronType type;		// {none, sigmoid, relu, tanh, target}
-	int isleaf;		// {input, output, hidden}
+    NodeType isleaf;		// {input, output, hidden}
     int id;         // id in Graph: QVector<Neuron>
 
-	//QRect _shape;
-	//static int _radius;
-	//bool conflict(const Neuron&);
+	std::list<int> adjedge;
+    std::list<int> rev_adjedge;
+    int indeg;
+    double _b;
+    double _value;
+    double grad;
 };
 
 #endif // !NEURONS_H

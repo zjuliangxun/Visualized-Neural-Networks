@@ -262,7 +262,7 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
         else if (edit_mode == addNeuron) {
             Neuron x;
             QRectF shape_x;
-            x.isleaf = 1;
+           // x.isleaf = 1;
             x.type = current_neuron.type;
             x._value = 0.0;
             int flag = true;
