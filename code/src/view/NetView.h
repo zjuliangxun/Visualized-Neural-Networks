@@ -11,13 +11,14 @@
 #include <QGraphicsItem>
 #include "../viewmodel/NetViewModel.h"
 #include "../common/Common.h"
-#include "NetViewItems.h"
+#include "NeuronView.h"
+#include "WeightView.h"
 
 enum EditMode {
 	selectNeuron, addNeuron, addWeight
 };
 enum DragMode {
-    noDrag, preDrag, canDrag, lineDrag
+    noDrag, preDrag, canDrag, isDrag, lineDrag
 };
 
 QT_BEGIN_NAMESPACE
@@ -35,6 +36,8 @@ public:
     //BIND COMMANDS
     void set_add_neuron_command(Command&&);
     void set_connect_command(Command&&);    // commit: addweights
+    void set_change_neuron_command(Command&&);  // commit: addvalue
+    void set_change_weight_command(Command&&);  // commit: addvalue
 
 	//ATTACH DATA AND MODELS
     void set_FNN(std::shared_ptr<Graph>);
@@ -61,6 +64,8 @@ private:
     //COMMANDS
     Command add_neuron_command;
     Command connect_command;    // commit: addweights
+    Command change_neuron_command;  // commit: addvalue
+    Command change_weight_command;  // commit: addvalue
 
 	// edit state
 	EditMode edit_mode;
@@ -72,7 +77,8 @@ private:
 	// shape of the Graph
     QVector<QRectF> shape_neurons;
     QRectF shape_current_neuron;
-    QVector<QPair<int, int> > shape_weights;
+    QVector<QPair<int, int> > topology_weights;
+    QVector<QLineF> shape_weights;
     QLineF shape_current_weight;
     //QVector<QGraphicsEllipseItem> shape_neurons;
     //QGraphicsEllipseItem shape_current_neuron;
@@ -81,15 +87,17 @@ private:
 
     // display modules
     Ui::NetView *ui;
+    NeuronView *neuronView;
+    WeightView *weightView;
 
-    // interbal functions;
-    void paintNeurons(QPixmap*);
-    void paintWeights(QPixmap*);
+    // internal functions;
+    void paintNeurons(QPainter*);
+    void paintWeights(QPainter*);
 
 protected:
 	void mousePressEvent(QMouseEvent*);
 	void mouseReleaseEvent(QMouseEvent*);
-//    void mouseDoubleClickEvent(QMouseEvent*);
+    void mouseDoubleClickEvent(QMouseEvent*);
 	void mouseMoveEvent(QMouseEvent*);
 	void paintEvent(QPaintEvent*);
 
