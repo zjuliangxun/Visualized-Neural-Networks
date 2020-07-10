@@ -55,6 +55,8 @@ private slots:
 	void tanh_button_clicked();
 	void target_button_clicked();
 
+    void change_neuron_value(QPair<int, double>);
+
 private:
 	/*Ui::View *ui;*/
 	//MODELS AND DATA BIND

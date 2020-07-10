@@ -5,6 +5,7 @@ WeightView::WeightView(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::WeightView)
 {
+    setAttribute(Qt::WA_DeleteOnClose);
     ui->setupUi(this);
     validator = new QDoubleValidator(this);
     validator->setNotation(QDoubleValidator::StandardNotation);

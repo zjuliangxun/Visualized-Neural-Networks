@@ -96,10 +96,6 @@ NetView::NetView(QWidget* parent)
 NetView::~NetView()
 {
     delete ui;
-    if (neuronView)
-        delete neuronView;
-    if (weightView)
-        delete weightView;
 }
 
 
@@ -349,11 +345,15 @@ void NetView::mouseDoubleClickEvent(QMouseEvent* e)
     for (int i = 0; i != this->FNN->_neurons.size() && !triggered; ++i) {
         if (isinside(e->pos(), shape_neurons.at(i))) {
             neuronView = new NeuronView(this);
+            connect(neuronView,
+                    SIGNAL(sendData(QPair<int, double>)),
+                    this,
+                    SLOT(change_neuron_value(QPair<int, double>)));
             neuronView->setValue(this->FNN->_neurons.at(i)._value);
-            neuronView->show();
-            double value = neuronView->getValue();
-            QPair<int, double> param(this->FNN->_neurons.at(i).id, value);
-            change_neuron_command(param);
+            neuronView->setID(this->FNN->_neurons.at(i).id);
+            if (neuronView->exec() == QDialog::Accepted) {
+                update();
+            }
             triggered = true;
         }
     }
@@ -462,3 +462,7 @@ void NetView::target_button_clicked()
     update();
 }
 
+void NetView::change_neuron_value(QPair<int, double> data)
+{
+    change_neuron_command(data);
+}
