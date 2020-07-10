@@ -488,8 +488,12 @@ void NetView::change_weight_value(QPair<int, double> data)
 /* Menu Reaction */
 void NetView::calc_forward_clicked()
 {
-    bool calc_success = calculate_forward_command(0);
-    if (!calc_success) {
+    int flag;
+    bool calc_success = calculate_forward_command(&flag);
+    if (calc_success) {
+        update();
+    }
+    else {
         /* check */
     }
 }
