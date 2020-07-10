@@ -44,3 +44,18 @@ Command NetViewModel::get_connect_command(){
     };
 }
 
+Command NetViewModel::change_neuron_command(){
+    return [this](std::any t)->bool{
+        QPair<int,double> g=std::any_cast<QPair<int,double>>(t);
+        return this->m_NetM->change_neruo(g.first,g.second);
+    };
+}
+
+Command NetViewModel::change_weight_command(){
+    return [this](std::any t)->bool{
+        QPair<int,double> g=std::any_cast<QPair<int,double>>(t);
+        return this->m_NetM->change_weight(g.first,g.second);
+    };
+}
+
+
