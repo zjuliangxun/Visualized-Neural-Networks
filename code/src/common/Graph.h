@@ -19,10 +19,10 @@ public:
     std::map<int ,int> neumap;
     bool add_neuron(Neuron&&);
     bool add_link(Weight && wigh);
-private:
     // return whether there exists loop
     bool topo_sort();
     bool backprop();
+private:
     double sigmod(double v);
     double dsigmod(double v);
     double tanh(double x);
