@@ -12,19 +12,21 @@ class NetModel :public PropertyTrigger{
 private:
 	//QVector<Neuron> neurons;
 	//QVector<Weight> weights;
-    Graph FNN;
+    shared_ptr<Graph> FNN;
 public:
+    NetModel();
 	//expose
     std::shared_ptr<Graph> get_FNN();
     //return commands
     std::function<bool(Neuron&&)> get_add_neuron_command();
-//	Command get_connect_command();
+    std::function<bool(int,int)> get_connect_command();
 
 	//get notifications-----through AddNotifications
 	void set_update_display_data_notification(Notification&& notification);
 	
 	//commands' core
     bool add_neuron(Neuron&&);
+    bool add_link(int src,int dst);
 //	void move(int);
 };
 
