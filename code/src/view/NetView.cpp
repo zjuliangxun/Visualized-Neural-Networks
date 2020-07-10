@@ -85,6 +85,8 @@ NetView::NetView(QWidget* parent)
     connect(addNeuronTanhAction, SIGNAL(triggered()), this, SLOT(tanh_button_clicked()));
     connect(addNeuronTargetAction, SIGNAL(triggered()), this, SLOT(target_button_clicked()));
 
+    connect(ui->actionForward, SIGNAL(triggered()), this, SLOT(calc_forward_clicked()));
+
     // initialize internal states
     selected_neuron = -1;
     edit_mode = selectNeuron;
@@ -411,6 +413,9 @@ void NetView::set_change_neuron_command(Command &&cmd) {
 void NetView::set_change_weight_command(Command &&cmd) {
     this->change_weight_command = cmd;
 }
+void NetView::set_calculate_forward_command(Command &&cmd) {
+    this->calculate_forward_command = cmd;
+}
 
 /* Binding Notifications */
 Notification NetView::tell_update_view_notification() {
@@ -460,5 +465,14 @@ void NetView::target_button_clicked()
     edit_mode = addNeuron;
     selected_neuron = -1;
     update();
+}
+
+/* Menu Reaction */
+void NetView::calc_forward_clicked()
+{
+    bool calc_success = calculate_forward_command(0);
+    if (!calc_success) {
+        /* check */
+    }
 }
 

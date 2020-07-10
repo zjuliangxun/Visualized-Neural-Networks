@@ -37,6 +37,18 @@
     <property name="title">
      <string>计算</string>
     </property>
+    <widget class="QMenu" name="menuBackpropagation">
+     <property name="title">
+      <string>Backpropagation</string>
+     </property>
+     <addaction name="actionRun_all"/>
+     <addaction name="separator"/>
+     <addaction name="actionGradient_calculate"/>
+     <addaction name="actionGradient_propagate"/>
+     <addaction name="actionUpdate_weights"/>
+    </widget>
+    <addaction name="actionForward"/>
+    <addaction name="menuBackpropagation"/>
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
@@ -49,6 +61,41 @@
    <addaction name="menu_4"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionForward">
+   <property name="text">
+    <string>Forward</string>
+   </property>
+  </action>
+  <action name="actionManual">
+   <property name="text">
+    <string>Manual</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionGradient_calculate">
+   <property name="text">
+    <string>Gradient Calculate</string>
+   </property>
+  </action>
+  <action name="actionGradient_propagate">
+   <property name="text">
+    <string>Gradient Propagate</string>
+   </property>
+  </action>
+  <action name="actionUpdate_weights">
+   <property name="text">
+    <string>Update Weights</string>
+   </property>
+  </action>
+  <action name="actionRun_all">
+   <property name="text">
+    <string>Run All</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
