@@ -1,4 +1,5 @@
 #include "NetModel.h"
+#include <stack>
 
 NetModel::NetModel(){
     this->FNN=make_shared<Graph>();
@@ -33,13 +34,42 @@ std::function<bool(int,int)>  NetModel::get_connect_command(){
 }
 
 bool NetModel::add_link(int src,int dst){
-    if(src==dst) return false;
-    int i;
-    for(i=0;i<this->FNN->_weights.size();i++){
-        if(src==this->FNN->_weights[i]._from&&dst==this->FNN->_weights[i]._to) return false;
+    if(estimate_circle(src,dst)) return false;
+    else{
+        Weight w;
+        w._from=src;
+        w._to=dst;
+        return this->FNN->add_link(std::move(w));
     }
-    Weight w;
-    w._from=src;
-    w._to=dst;
-    return this->FNN->add_link(std::move(w));
+}
+
+bool NetModel::estimate_circle(int src, int dst){
+    std::stack<int> node;
+    node.push(dst);
+    Neuron nuro;
+    while(!node.empty()){
+        int no=node.top()-1;
+        if(node.top()==src) return true;
+        nuro=this->FNN->_neurons[no];
+        int i;
+        node.pop();
+        auto itor=nuro.adjedge.begin();
+        for(i=0;i<nuro.adjedge.size();i++){
+            if(this->FNN->_weights[*itor-1]._to==dst&&this->FNN->_weights[*itor-1]._from==src) return true;
+            node.push(this->FNN->_weights[*itor-1]._to);
+            itor++;
+        }
+    }
+    return false;
+}
+
+bool NetModel::change_neruo(int id, double value){
+    if(this->FNN->_neurons[id-1].isleaf==nHidden) return false;
+    else this->FNN->_neurons[id-1]._value=value;
+    return true;
+}
+
+bool NetModel::change_weight(int id, double value){
+    this->FNN->_weights[id-1]._weight=value;
+    return true;
 }
