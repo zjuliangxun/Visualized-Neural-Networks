@@ -7,8 +7,8 @@
 
 /* Auxiliary Functions */
 QRectF newQRectF(QPointF, int);
-bool conflict(const QRectF lhs, const QRectF rhs, int radius = 16);
-bool conflict(const QPointF p, const QRectF lhs, int radius = 16);
-bool isinside(const QPointF p, const QRectF lhs, int radius = 16);
+bool conflict(const QRectF lhs, const QRectF rhs, double radius = 24);
+bool conflict(const QPointF p, const QRectF lhs, double radius = 24);
+bool isinside(const QPointF p, const QRectF lhs, double radius = 24);
 
 #endif

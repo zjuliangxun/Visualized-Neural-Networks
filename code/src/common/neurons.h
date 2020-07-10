@@ -7,11 +7,15 @@ enum NeuronType {
 	nNone, nSigmoid, nRelu, nTanh, nTarget
 };
 
+enum NodeType {
+    nInput, nOutput, nHidden
+};
+
 class Neuron {
 public:
 	double _value;
 	NeuronType type;		// {none, sigmoid, relu, tanh, target}
-	int isleaf;		// {input, output, hidden}
+    NodeType isleaf;		// {input, output, hidden}
     int id;         // id in Graph: QVector<Neuron>
 
 	//QRect _shape;
