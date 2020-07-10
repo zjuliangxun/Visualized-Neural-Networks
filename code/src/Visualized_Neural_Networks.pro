@@ -26,7 +26,8 @@ SOURCES += \
     main.cpp \
     model/NetModel.cpp \
     view/NetView.cpp \
-    view/NetViewItems.cpp \
+    view/NeuronView.cpp \
+    view/WeightView.cpp \
     view/utils.cpp \
     viewmodel/NetViewModel.cpp
 
@@ -39,12 +40,17 @@ HEADERS += \
     common/weights.h \
     model/NetModel.h \
     view/NetView.h \
-    view/NetViewItems.h \
+    view/NeuronView.h \
+    view/WeightView .h \
+    view/WeightView .h \
+    view/WeightView.h \
     view/utils.h \
     viewmodel/NetViewModel.h
 
 FORMS += \
-    view/NetView.ui
+    view/NetView.ui \
+    view/NeuronView.ui \
+    view/WeightView.ui
 
 TRANSLATIONS += \
     Visualized_Neural_Networks_zh_CN.ts

@@ -11,7 +11,8 @@
 #include <QGraphicsItem>
 #include "../viewmodel/NetViewModel.h"
 #include "../common/Common.h"
-#include "NetViewItems.h"
+#include "NeuronView.h"
+#include "WeightView.h"
 
 enum EditMode {
 	selectNeuron, addNeuron, addWeight
@@ -76,7 +77,8 @@ private:
 	// shape of the Graph
     QVector<QRectF> shape_neurons;
     QRectF shape_current_neuron;
-    QVector<QPair<int, int> > shape_weights;
+    QVector<QPair<int, int> > topology_weights;
+    QVector<QLineF> shape_weights;
     QLineF shape_current_weight;
     //QVector<QGraphicsEllipseItem> shape_neurons;
     //QGraphicsEllipseItem shape_current_neuron;
@@ -85,15 +87,17 @@ private:
 
     // display modules
     Ui::NetView *ui;
+    NeuronView *neuronView;
+    WeightView *weightView;
 
-    // interbal functions;
+    // internal functions;
     void paintNeurons(QPainter*);
     void paintWeights(QPainter*);
 
 protected:
 	void mousePressEvent(QMouseEvent*);
 	void mouseReleaseEvent(QMouseEvent*);
-//    void mouseDoubleClickEvent(QMouseEvent*);
+    void mouseDoubleClickEvent(QMouseEvent*);
 	void mouseMoveEvent(QMouseEvent*);
 	void paintEvent(QPaintEvent*);
 

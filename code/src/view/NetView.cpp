@@ -1,8 +1,10 @@
-#include "NetView.h"
-#include "ui_NetView.h"
 #include <QPair>
-#include "utils.h"
 #include <cmath>
+
+#include "NetView.h"
+#include "NeuronView.h"
+#include "ui_NetView.h"
+#include "utils.h"
 
 /* auxiliary functions */
 static int _radius = 24;
@@ -87,11 +89,17 @@ NetView::NetView(QWidget* parent)
     selected_neuron = -1;
     edit_mode = selectNeuron;
     drag_mode = noDrag;
+    neuronView = nullptr;
+    weightView = nullptr;
 }
 
 NetView::~NetView()
 {
     delete ui;
+    if (neuronView)
+        delete neuronView;
+    if (weightView)
+        delete weightView;
 }
 
 
@@ -193,12 +201,13 @@ void NetView::paintNeurons(QPainter *painter)
 void NetView::paintWeights(QPainter *painter)
 {
     painter->setPen(QPen(Qt::black, 1));
-    for (int i = 0; i != shape_weights.size(); ++i) {
+    shape_weights.clear();
+    for (int i = 0; i != topology_weights.size(); ++i) {
         QPointF p1, p2;
         for (int j = 0; j != this->FNN->_neurons.size(); ++j) {
-            if (this->FNN->_neurons.at(j).id == shape_weights.at(i).first)
+            if (this->FNN->_neurons.at(j).id == topology_weights.at(i).first)
                 p1 = shape_neurons.at(j).center();
-            if (this->FNN->_neurons.at(j).id == shape_weights.at(i).second)
+            if (this->FNN->_neurons.at(j).id == topology_weights.at(i).second)
                 p2 = shape_neurons.at(j).center();
         }
         QPointF dp;
@@ -209,9 +218,12 @@ void NetView::paintWeights(QPainter *painter)
         p1.setY(p1.y() + dp.y() * _radius / l);
         p2.setX(p2.x() - dp.x() * _radius / l);
         p2.setY(p2.y() - dp.y() * _radius / l);
+        shape_weights.append(QLineF(p1, p2));
         painter->drawLine(QLineF(p1, p2));
-        painter->drawRect(newQRectF(p1, 4));
-        painter->drawEllipse(newQRectF(p2, 3));
+        painter->drawRect(newQRectF(p1, 4));    // from
+        painter->drawEllipse(newQRectF(p2, 3)); // to
+
+        // display weight and gradient
         QPointF midp = (p1 + p2) / 2;
         if (l > 3 * _radius)
             painter->drawText(newQRectF(midp, 16),
@@ -317,7 +329,7 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
                     bool connect_success = (param.first != param.second);
                     connect_success &= connect_command(param);
                     if (connect_success) {
-                        shape_weights.append(param);
+                        topology_weights.append(param);
                     }
                     break;
                 }
@@ -331,10 +343,33 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
     }
     update();
 }
-//void NetView::mouseDoubleClickEvent(QMouseEvent* e)
-//{
-
-//}
+void NetView::mouseDoubleClickEvent(QMouseEvent* e)
+{
+    bool triggered = false;
+    for (int i = 0; i != this->FNN->_neurons.size() && !triggered; ++i) {
+        if (isinside(e->pos(), shape_neurons.at(i))) {
+            neuronView = new NeuronView(this);
+            neuronView->setValue(this->FNN->_neurons.at(i)._value);
+            neuronView->show();
+            double value = neuronView->getValue();
+            QPair<int, double> param(this->FNN->_neurons.at(i).id, value);
+            change_neuron_command(param);
+            triggered = true;
+        }
+    }
+    // weight
+    for (int i = 0; i != this->FNN->_weights.size() && !triggered; ++i) {
+        if (nearline(e->pos(), shape_weights.at(i)), 2) {
+            weightView = new WeightView(this);
+            weightView->setWeight(this->FNN->_weights.at(i)._weight);
+            weightView->show();
+            double value = weightView->getWeight();
+//            QPair<int, double> param(this->FNN->_weights.at(i).id, value);
+//            change_weight_command(param);
+        }
+    }
+    update();
+}
 void NetView::mouseMoveEvent(QMouseEvent* e)
 {
     shape_current_neuron = newQRectF(e->pos(), _radius);
