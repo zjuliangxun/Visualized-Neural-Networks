@@ -4,7 +4,6 @@
 #define NEURONVIEW_H
 
 #include <QWidget>
-#include "../common/Common.h"
 #include "ui_NeuronView.h"
 
 QT_BEGIN_NAMESPACE

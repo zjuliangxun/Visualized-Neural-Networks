@@ -54,11 +54,12 @@
      <x>60</x>
      <y>100</y>
      <width>141</width>
-     <height>16</height>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>输入值(浮点数):</string>
+    <string>输入值(浮点数):
+(-99.99,99.99)</string>
    </property>
   </widget>
  </widget>

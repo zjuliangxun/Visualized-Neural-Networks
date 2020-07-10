@@ -221,12 +221,12 @@ void NetView::paintWeights(QPainter *painter)
 
         // display weight and gradient
         QPointF midp = (p1 + p2) / 2;
-        if (l > 3 * _radius)
-            painter->drawText(newQRectF(midp, 16),
+        if (l > 4 * _radius)
+            painter->drawText(newQRectF(midp, 48),
                               Qt::AlignCenter,
-                              QString::number(this->FNN->_weights.at(i)._weight)
+                              QString::number(this->FNN->_weights.at(i)._weight, 10, 2)
                               + QString("/")
-                              + QString::number((this->FNN->_weights.at(i)._gradient)));
+                              + QString::number(this->FNN->_weights.at(i)._gradient, 10, 2));
     }
     if (drag_mode == lineDrag)
         painter->drawLine(shape_current_weight);
@@ -354,21 +354,31 @@ void NetView::mouseDoubleClickEvent(QMouseEvent* e)
             if (neuronView->exec() == QDialog::Accepted) {
                 update();
             }
+            else {
+                /* error */
+            }
             triggered = true;
         }
     }
     // weight
     for (int i = 0; i != this->FNN->_weights.size() && !triggered; ++i) {
-        if (nearline(e->pos(), shape_weights.at(i)), 2) {
+        if (nearline(e->pos(), shape_weights.at(i), 5)) {
             weightView = new WeightView(this);
+            connect(weightView,
+                    SIGNAL(sendData(QPair<int, double>)),
+                    this,
+                    SLOT(change_weight_value(QPair<int, double>)));
             weightView->setWeight(this->FNN->_weights.at(i)._weight);
-            weightView->show();
-            double value = weightView->getWeight();
-//            QPair<int, double> param(this->FNN->_weights.at(i).id, value);
-//            change_weight_command(param);
+            weightView->setID(this->FNN->_weights.at(i).id);
+            if (weightView->exec() == QDialog::Accepted) {
+                update();
+            }
+            else {
+                /* error */
+            }
+            triggered = true;
         }
     }
-    update();
 }
 void NetView::mouseMoveEvent(QMouseEvent* e)
 {
@@ -464,5 +474,9 @@ void NetView::target_button_clicked()
 
 void NetView::change_neuron_value(QPair<int, double> data)
 {
-    change_neuron_command(data);
+    change_neuron_command(data);    // now no failure dealing
+}
+void NetView::change_weight_value(QPair<int, double> data)
+{
+    change_weight_command(data);
 }

@@ -8,6 +8,7 @@ NeuronView::NeuronView(QWidget *parent)
     setAttribute(Qt::WA_DeleteOnClose);
     ui->setupUi(this);
     validator = new QDoubleValidator(this);
+    validator->setRange(-99.99, 99.99);
     validator->setNotation(QDoubleValidator::StandardNotation);
     ui->lineEdit->setValidator(validator);
 

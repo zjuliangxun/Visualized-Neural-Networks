@@ -56,6 +56,7 @@ private slots:
 	void target_button_clicked();
 
     void change_neuron_value(QPair<int, double>);
+    void change_weight_value(QPair<int, double>);
 
 private:
 	/*Ui::View *ui;*/
