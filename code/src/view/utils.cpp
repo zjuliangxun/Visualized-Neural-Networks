@@ -33,45 +33,27 @@ bool isinside(const QPointF p, const QRectF lhs, double radius)
 }
 double distance(const QPointF a, const QPointF b)
 {
-    double dx = a.x() - b.x();
-    double dy = a.y() - b.y();
-    return sqrt(dx * dx + dy * dy);
-}
-double cmult(const QPointF a, const QPointF b, const QPointF c)
-{
-    return (b.x() - a.x()) * (c.y() - a.y())
-            - (c.x() - a.x()) * (b.y() - a.y());
-}
-double pmult(const QPointF a, const QPointF b)
-{
-    return a.x() * b.x() + a.y() * b.y();
-}
-int sign(double x)
-{
-    if (fabs(x) < 1e-5)
-        return 0;
-    return x > 0 ? 1 : -1;
+    qreal dx = a.x() - b.x();
+    qreal dy = a.y() - b.y();
+    return qSqrt(dx * dx + dy * dy);
 }
 double dist_to_line(const QPointF a, const QLineF l)
 {
-    QPointF s1, s2, s3;
-    s1.setX(l.p2().x() - l.p1().x());
-    s1.setY(l.p2().y() - l.p1().y());
+    QPointF p, p1, p2;
+    p = a, p1 = l.p1(), p2 = l.p2();
+    double cross = (p2.x() - p1.x()) * (p.x() - p1.x())
+                    + (p2.y() - p1.y()) * (p.y() - p1.y());
+    if (cross <= 0)
+        return distance(p, p1);
 
-    s2.setX(a.x() - l.p1().x());
-    s2.setY(a.y() - l.p1().y());
+    double d2 = distance(p1, p2) * distance(p1, p2);
+    if (cross >= d2)
+        return distance(p, p2);
 
-    s2.setX(a.x() - l.p2().x());
-    s2.setY(a.y() - l.p2().y());
-
-    if (l.p1().x() == l.p2().x() && l.p1().y() == l.p2().y())
-        return distance(a, l.p1());
-    if (sign(pmult(s1, s2)) < 0)
-        return distance(a, l.p1());
-    else if (sign(pmult(s1, s3)) > 0)
-        return distance(a, l.p2());
-    else
-        return fabs(cmult(l.p1(), a, l.p2()) / distance(l.p1(), l.p2()));
+    double r = cross / d2;
+    double px = p1.x() + (p2.x() - p1.x()) * r;
+    double py = p1.y() + (p2.y() - p1.y()) * r;
+    return distance(p, QPointF(px, py));
 }
 bool nearline(const QPointF p, const QLineF lhs, double delta)
 {

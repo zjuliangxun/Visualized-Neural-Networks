@@ -59,6 +59,9 @@ private slots:
 
     void calc_forward_clicked();    // commit: addcalcforward
 
+    void change_neuron_value(QPair<int, double>);
+    void change_weight_value(QPair<int, double>);
+
 private:
 	/*Ui::View *ui;*/
 	//MODELS AND DATA BIND
