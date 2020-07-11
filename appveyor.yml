@@ -39,7 +39,7 @@ after_build:
   - dir
 
 artifacts:
-  - path: Visualized_Neural_Networks.exe
+  - path: code/src/release/Visualized_Neural_Networks.exe
 
 deploy:
   release: $(releaseName)
