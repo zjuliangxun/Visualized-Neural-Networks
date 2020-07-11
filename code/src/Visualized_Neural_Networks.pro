@@ -43,8 +43,6 @@ HEADERS += \
     model/NetModel.h \
     view/NetView.h \
     view/NeuronView.h \
-    view/WeightView .h \
-    view/WeightView .h \
     view/WeightView.h \
     view/utils.h \
     viewmodel/NetViewModel.h
