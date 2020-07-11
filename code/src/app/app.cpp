@@ -18,6 +18,7 @@ App::App()
     view->set_change_weight_command(viewmodel->get_change_weight_command());
     view->set_calculate_forward_command(viewmodel->get_calculate_forward_command());
     view->set_calculate_gradient_command(viewmodel->get_calculate_gradient_command());
+    view->set_propagate_gradient_command(viewmodel->get_propagate_gradient_command());
 
 	// viewmodel
     viewmodel->AddNotification(view->tell_update_view_notification());//add notification

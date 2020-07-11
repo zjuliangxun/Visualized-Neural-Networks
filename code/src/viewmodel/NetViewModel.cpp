@@ -70,5 +70,11 @@ Command NetViewModel::get_calculate_gradient_command(){
     };
 }
 
+Command NetViewModel::get_propagate_gradient_command(){
+    return [this](std::any t)->bool{
+        return this->m_NetM->propagate_gradient();
+    };
+}
+
 
 

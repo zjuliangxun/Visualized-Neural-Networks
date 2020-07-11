@@ -2,7 +2,6 @@
 #include <cmath>
 
 #include "NetView.h"
-#include "NeuronView.h"
 #include "ui_NetView.h"
 #include "utils.h"
 
@@ -87,6 +86,7 @@ NetView::NetView(QWidget* parent)
 
     connect(ui->actionForward, SIGNAL(triggered()), this, SLOT(calc_forward_clicked()));
     connect(ui->actionGradient_calculate, SIGNAL(triggered()), this, SLOT(calc_gradient_clicked()));
+    connect(ui->actionGradient_propagate, SIGNAL(triggered()), this, SLOT(prop_gradient_clicked()));
 
     // initialize internal states
     selected_neuron = -1;
@@ -444,6 +444,9 @@ void NetView::set_calculate_forward_command(Command &&cmd) {
 void NetView::set_calculate_gradient_command(Command &&cmd) {
     this->calculate_gradient_command = cmd;
 }
+void NetView::set_propagate_gradient_command(Command &&cmd) {
+    this->propagate_gradient_command = cmd;
+}
 
 /* Binding Notifications */
 Notification NetView::tell_update_view_notification() {
@@ -519,6 +522,17 @@ void NetView::calc_gradient_clicked()
 {
     int flag;
     bool calc_success = calculate_gradient_command(&flag);
+    if (calc_success) {
+        update();
+    }
+    else {
+        /* check */
+    }
+}
+void NetView::prop_gradient_clicked()
+{
+    int flag;
+    bool calc_success = propagate_gradient_command(&flag);
     if (calc_success) {
         update();
     }

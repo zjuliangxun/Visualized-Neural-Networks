@@ -131,31 +131,77 @@ bool NetModel::calculate_forward() {
 
 bool NetModel::calculate_gradient()
 {
-    for (int i = 0; i != FNN->_weights.size(); ++i) {
-        int toID = FNN->_weights.at(i)._to;
-        int fromID = FNN->_weights.at(i)._from;
-        NeuronType t = FNN->atNeuronID(toID).type;
+    for (int i = 0; i != FNN->_neurons.size(); ++i) {
+        NeuronType t = FNN->_neurons.at(i).type;
         double gradient = 1.0;
         switch (t) {
         case nSigmoid:
-            gradient = dsigmod(FNN->atNeuronID(toID)._value);
+            gradient = dsigmod(FNN->_neurons.at(i)._value);
             break;
         case nRelu:
-            gradient = drelu(FNN->atNeuronID(toID)._value);
+            gradient = drelu(FNN->_neurons.at(i)._value);
             break;
         case nTanh:
-            gradient = dtanh(FNN->atNeuronID(toID)._value);
+            gradient = dtanh(FNN->_neurons.at(i)._value);
             break;
         case nTarget:
-            gradient = dloss(FNN->atNeuronID(toID)._value,
-                             FNN->atNeuronID(toID)._targetvalue,
+            gradient = dloss(FNN->_neurons.at(i)._value,
+                             FNN->_neurons.at(i)._targetvalue,
                              loss_func);
             break;
         default:
             break;
         }
-        gradient *= FNN->atNeuronID(fromID)._value;
+        FNN->_neurons[i]._grad = gradient;
+    }
+    for (int i = 0; i != FNN->_weights.size(); ++i) {
+        int fromID = FNN->_weights.at(i)._from;
+        double gradient = 1.0;
+        gradient = FNN->atNeuronID(fromID)._value;
         FNN->_weights[i]._gradient = gradient;
+    }
+    return true;
+}
+
+bool NetModel::propagate_gradient()
+{
+    QVector<double> accumulate_grad(FNN->_neurons.size());
+    QVector<int> calculated_out(FNN->_neurons.size());
+    QVector<bool> calculated(FNN->_neurons.size());
+    int cnt = 0;
+    for (int i = 0; i != FNN->_neurons.size(); ++i) {
+        if (FNN->_neurons[i].isleaf == nInput)
+            ++cnt;
+        calculated[i] = false;
+        calculated_out[i] = 0;
+        accumulate_grad[i] = 0;
+    }
+    while (cnt != FNN->_neurons.size()) {
+        for (int i = 0; i != FNN->_neurons.size(); ++i) {
+            if (FNN->_neurons.at(i).isleaf == nInput)
+                continue;
+            if (calculated_out[i] == FNN->_neurons.at(i).outdeg
+                    && !calculated[i]) {
+                if (FNN->_neurons.at(i).isleaf != nOutput)
+                    FNN->_neurons[i]._grad *= accumulate_grad[i];
+                calculated[i] = true;
+                ++cnt;
+                for (auto e: FNN->_neurons[i].rev_adjedge) {
+                    int fromID = FNN->atWeightID(e)._from;
+                    for (int j = 0; j != FNN->_neurons.size(); ++j) {
+                        if (FNN->_neurons[j].id == fromID) {
+                            FNN->atWeightID(e)._gradient
+                                    *= FNN->_neurons[i]._grad;
+                            calculated_out[j]++;
+                            accumulate_grad[j]
+                                    += (FNN->_neurons[i]._grad
+                                    * FNN->atWeightID(e)._weight);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
     return true;
 }

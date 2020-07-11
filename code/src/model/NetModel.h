@@ -37,6 +37,7 @@ public:
     bool estimate_circle(int src, int dst);
     bool calculate_forward();
     bool calculate_gradient();
+    bool propagate_gradient();
     bool update_weight();   // according to learning_rate
     bool backprop();        // combine gradient calculate&update weight
 //	void move(int);

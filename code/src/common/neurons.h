@@ -21,10 +21,11 @@ public:
 	std::list<int> adjedge;
     std::list<int> rev_adjedge;
     int indeg;
+    int outdeg;
     double _b;
     double _value;
     double _targetvalue;
-    double grad;
+    double _grad;
 };
 
 #endif // !NEURONS_H
