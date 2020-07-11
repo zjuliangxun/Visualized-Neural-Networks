@@ -1,5 +1,6 @@
 #include <stack>
 #include <queue>
+#include <map>
 #include "NetModel.h"
 #include "math_utils.h"
 
@@ -81,8 +82,40 @@ bool NetModel::change_weight(int id, double value){
 
 
 bool NetModel::calculate_forward() {
+    QVector<int> calculated_in(FNN->_neurons.size());
+    QVector<bool> calculated(FNN->_neurons.size());
+    for (int i = 0; i != FNN->_neurons.size(); ++i) {
+        if (FNN->_neurons[i].isleaf != nInput)
+            FNN->_neurons[i]._value = FNN->_neurons[i]._b;
+        calculated[i] = false;
+        calculated_in[i] = 0;
+    }
+    int cnt = 0;
+    while (cnt != FNN->_neurons.size()) {
+        for (int i = 0; i != FNN->_neurons.size(); ++i) {
+            if (calculated_in[i] == FNN->_neurons.at(i).indeg
+                    && !calculated[i]) {
+                calculated[i] = true;
+                ++cnt;
+                double value = FNN->_neurons.at(i)._value;
+                for (auto e: FNN->_neurons[i].adjedge) {
+                    int toID = FNN->atWeightID(e)._to;
+                    for (int j = 0; j != FNN->_neurons.size(); ++j) {
+                        if (FNN->_neurons[j].id == toID) {
+                            calculated_in[j]++;
+                            break;
+                        }
+                    }
+                    FNN->atNeuronID(toID)._value +=
+                            FNN->atWeightID(e)._weight * value;
+                }
+            }
+        }
+    }
+
 //    for(auto i:FNN->_neurons){i.indeg=i._value=0;}
 //    std::queue<Neuron*> mq;
+//    std::map<int ,int> neumap;
 //    for(auto i:this->FNN->_neurons){
 //        for(auto e:i.adjedge){
 //            FNN->_neurons[neumap[_weights[e]._to]].indeg++;

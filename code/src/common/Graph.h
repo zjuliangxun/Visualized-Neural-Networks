@@ -6,7 +6,6 @@
 #include <QVector>
 #include "neurons.h"
 #include "weights.h"
-#include<map>
 
 
 class Graph {
@@ -17,7 +16,6 @@ private:
 public:
 	QVector<Neuron> _neurons;
 	QVector<Weight> _weights;
-    std::map<int ,int> neumap;
     bool add_neuron(Neuron&&);
     bool add_link(Weight && wigh);
     // return whether there exists loop
