@@ -32,10 +32,11 @@ build_script:
   - mingw32-make
 
 after_build:
-  - if "%APPVEYOR_REPO_TAG%"=="true" windeployqt release\%releaseName%.exe --qmldir %QTDIR%\qml
+  - if "%APPVEYOR_REPO_TAG%"=="true" windeployqt release\Visualized_Neural_Networks.exe --qmldir %QTDIR%\qml
+  - mv \release\Visualized_Neural_Networks.exe %APPVEYOR_BUILD_FOLDER%\Visualized_Neural_Networks.exe
 
 artifacts:
-  - path: release
+  - path: Visualized_Neural_Networks.exe
     name: $(releaseName)
 
 deploy:
