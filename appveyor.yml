@@ -33,21 +33,9 @@ build_script:
 
 after_build:
   - if "%APPVEYOR_REPO_TAG%"=="true" windeployqt release\Visualized_Neural_Networks.exe --qmldir %QTDIR%\qml
-  - dir
-  - cd release
-  - dir
-  - cd ..
-  - cd ..
-  - dir
-  - cd ..
-  - dir
-  - cd ..
-  - dir
-  - cd %APPVEYOR_BUILD_FOLDER%
-  - dir
 
 artifacts:
-  - path: C:\projects\visualized-neural-networks\code\src\release
+  - path: release
     name: $(releaseName)
 
 deploy:
