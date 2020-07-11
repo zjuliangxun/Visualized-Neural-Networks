@@ -42,7 +42,7 @@ deploy:
   provider: GitHub
   auth_token: $(GITHUB_OAUTH_TOKEN)
   description: "Visualized Neural Networks release version."
-  draft: false
+  draft: true
   prerelease: false
   on:
       branch: master
