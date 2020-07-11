@@ -19,8 +19,10 @@ public:
     //GET COMANDS
     Command get_add_neuron_command();
     Command get_connect_command();
-    Command change_neuron_command();
-    Command change_weight_command();
+    Command get_change_neuron_command();
+    Command get_change_weight_command();
+    Command get_calculate_forward_command();
+
 	//EXPOSE ATTR
     std::shared_ptr<Graph> get_FNN();
 

@@ -23,6 +23,7 @@ public:
     int indeg;
     double _b;
     double _value;
+    double _targetvalue;
     double grad;
 };
 
