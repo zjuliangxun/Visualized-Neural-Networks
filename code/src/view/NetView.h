@@ -39,6 +39,8 @@ public:
     void set_change_neuron_command(Command&&);  // commit: addvalue
     void set_change_weight_command(Command&&);  // commit: addvalue
 
+    void set_calculate_forward_command(Command&&);  // commit: addcalcforward
+
 	//ATTACH DATA AND MODELS
     void set_FNN(std::shared_ptr<Graph>);
 	void attach_ViewModel(std::shared_ptr<NetViewModel> refModel) noexcept;
@@ -55,6 +57,8 @@ private slots:
 	void tanh_button_clicked();
 	void target_button_clicked();
 
+    void calc_forward_clicked();    // commit: addcalcforward
+
     void change_neuron_value(QPair<int, double>);
     void change_weight_value(QPair<int, double>);
 
@@ -69,6 +73,8 @@ private:
     Command connect_command;    // commit: addweights
     Command change_neuron_command;  // commit: addvalue
     Command change_weight_command;  // commit: addvalue
+
+    Command calculate_forward_command;  // commit: addcalcforward
 
 	// edit state
 	EditMode edit_mode;

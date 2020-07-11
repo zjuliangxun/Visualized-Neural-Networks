@@ -85,6 +85,8 @@ NetView::NetView(QWidget* parent)
     connect(addNeuronTanhAction, SIGNAL(triggered()), this, SLOT(tanh_button_clicked()));
     connect(addNeuronTargetAction, SIGNAL(triggered()), this, SLOT(target_button_clicked()));
 
+    connect(ui->actionForward, SIGNAL(triggered()), this, SLOT(calc_forward_clicked()));
+
     // initialize internal states
     selected_neuron = -1;
     edit_mode = selectNeuron;
@@ -165,26 +167,37 @@ void NetView::paintNeurons(QPainter *painter)
             painter->setBrush(QBrush(n_color, Qt::Dense7Pattern));
             break;
         case nOutput:
-            painter->setBrush(QBrush(n_color, Qt::HorPattern));
+            painter->setBrush(QBrush(n_color, Qt::Dense7Pattern));
             break;
         default:
             break;
         }
         painter->drawEllipse(shape_neurons.at(i));
 
-        painter->drawText(newQRectF(
-                             shape_neurons.at(i).center(),
-                             20),
-                         Qt::AlignCenter,
-                         QString::number(
-                             this->FNN->_neurons.at(i)._value,
-                             10, 2));
 
         if (this->FNN->_neurons.at(i).type == nTarget) {
             QRectF outer = shape_neurons.at(i);
             outer.setTopLeft(QPointF(outer.left() - 3, outer.top() - 3));
             outer.setBottomRight(QPointF(outer.right() + 3, outer.bottom() + 3));
             painter->drawEllipse(outer);
+            QString disptext =
+                    QString::number(this->FNN->_neurons.at(i)._targetvalue, 10, 2)
+                    + "\n"
+                    + QString::number(this->FNN->_neurons.at(i)._value, 10, 2);
+            painter->drawText(newQRectF(
+                                 shape_neurons.at(i).center(),
+                                 24),
+                             Qt::AlignCenter,
+                             disptext);
+        }
+        else {
+            painter->drawText(newQRectF(
+                                 shape_neurons.at(i).center(),
+                                 20),
+                             Qt::AlignCenter,
+                             QString::number(
+                                 this->FNN->_neurons.at(i)._value,
+                                 10, 2));
         }
         if (selected_neuron == this->FNN->_neurons.at(i).id) {
             QRectF outer = shape_neurons.at(i);
@@ -421,6 +434,9 @@ void NetView::set_change_neuron_command(Command &&cmd) {
 void NetView::set_change_weight_command(Command &&cmd) {
     this->change_weight_command = cmd;
 }
+void NetView::set_calculate_forward_command(Command &&cmd) {
+    this->calculate_forward_command = cmd;
+}
 
 /* Binding Notifications */
 Notification NetView::tell_update_view_notification() {
@@ -471,7 +487,6 @@ void NetView::target_button_clicked()
     selected_neuron = -1;
     update();
 }
-
 void NetView::change_neuron_value(QPair<int, double> data)
 {
     change_neuron_command(data);    // now no failure dealing
@@ -479,4 +494,17 @@ void NetView::change_neuron_value(QPair<int, double> data)
 void NetView::change_weight_value(QPair<int, double> data)
 {
     change_weight_command(data);
+}
+
+/* Menu Reaction */
+void NetView::calc_forward_clicked()
+{
+    int flag;
+    bool calc_success = calculate_forward_command(&flag);
+    if (calc_success) {
+        update();
+    }
+    else {
+        /* check */
+    }
 }

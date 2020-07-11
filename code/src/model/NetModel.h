@@ -31,6 +31,8 @@ public:
     bool change_weight(int id, double value);
     //estimate whether there exist circle
     bool estimate_circle(int src, int dst);
+    bool calculate_forward();
+    bool backprop();
 //	void move(int);
 };
 
