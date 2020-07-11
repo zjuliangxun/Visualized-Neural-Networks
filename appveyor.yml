@@ -25,6 +25,7 @@ before_build:
 build_script:
   - call "%vcvars%"
   # - qmake -o Makefile code\src\Visualized_Neural_Networks.pro
+  - cd code\src
   - qmake
   - nmake
 
