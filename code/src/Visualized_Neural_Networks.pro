@@ -48,7 +48,7 @@ HEADERS += \
     viewmodel/NetViewModel.h
 
 FORMS += \
-    view\\NetView.ui \
+    view/NetView.ui \
     view/NeuronView.ui \
     view/WeightView.ui
 

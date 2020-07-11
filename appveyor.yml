@@ -27,7 +27,7 @@ build_script:
   # - qmake -o Makefile code\src\Visualized_Neural_Networks.pro
   - cd code\src
   - qmake
-  - nmake
+  - mingw32-make
 
 after_build:
   - if "%APPVEYOR_REPO_TAG%"=="true" windeployqt bin\Visualized_Neural_Networks.exe --qmldir %QTDIR%\qml
