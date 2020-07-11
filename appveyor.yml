@@ -37,6 +37,11 @@ after_build:
   - cd release
   - dir
   - cd ..
+  - cd ..
+  - dir
+  - cd ..
+  - dir
+  - cd %APPVEYOR_BUILD_FOLDER%
 
 artifacts:
   - path: release\Visualized_Neural_Networks.exe
