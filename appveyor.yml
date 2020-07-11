@@ -36,6 +36,7 @@ after_build:
   - cd %APPVEYOR_BUILD_FOLDER%
   - dir
   - cd code/src
+  - dir
 
 artifacts:
   - path: ./release/
