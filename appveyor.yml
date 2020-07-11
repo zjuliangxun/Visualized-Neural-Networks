@@ -47,7 +47,7 @@ after_build:
   - dir
 
 artifacts:
-  - path: release
+  - path: C:\projects\visualized-neural-networks\code\src\release
     name: $(releaseName)
 
 deploy:
