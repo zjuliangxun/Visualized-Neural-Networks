@@ -4,11 +4,11 @@ image: Visual Studio 2017
 
 environment:
   matrix:
-  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     platform: x64
     qt: 5.14.2    
     releaseName: Visualized_Neural_Networks_qt5142_vs2017_x64
-  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     platform: x86
     qt: 5.14.2
     releaseName: Visualized_Neural_Networks_qt5142_vs2017_x86
