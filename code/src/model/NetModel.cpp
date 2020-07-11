@@ -79,8 +79,6 @@ bool NetModel::change_weight(int id, double value){
     return true;
 }
 
-
-
 bool NetModel::calculate_forward() {
     QVector<int> calculated_in(FNN->_neurons.size());
     QVector<bool> calculated(FNN->_neurons.size());
@@ -95,9 +93,23 @@ bool NetModel::calculate_forward() {
         for (int i = 0; i != FNN->_neurons.size(); ++i) {
             if (calculated_in[i] == FNN->_neurons.at(i).indeg
                     && !calculated[i]) {
+                double value = FNN->_neurons.at(i)._value;
+                switch (FNN->_neurons.at(i).type) {
+                case nSigmoid:
+                    value = sigmod(value);
+                    break;
+                case nRelu:
+                    value = relu(value);
+                    break;
+                case nTanh:
+                    value = tanh(value);
+                    break;
+                default:
+                    break;
+                }
+                FNN->_neurons[i]._value = value;
                 calculated[i] = true;
                 ++cnt;
-                double value = FNN->_neurons.at(i)._value;
                 for (auto e: FNN->_neurons[i].adjedge) {
                     int toID = FNN->atWeightID(e)._to;
                     for (int j = 0; j != FNN->_neurons.size(); ++j) {
@@ -112,33 +124,6 @@ bool NetModel::calculate_forward() {
             }
         }
     }
-
-//    for(auto i:FNN->_neurons){i.indeg=i._value=0;}
-//    std::queue<Neuron*> mq;
-//    std::map<int ,int> neumap;
-//    for(auto i:this->FNN->_neurons){
-//        for(auto e:i.adjedge){
-//            FNN->_neurons[neumap[_weights[e]._to]].indeg++;
-//        }
-//    }
-//    for(auto i:FNN->_neurons){
-//        if(i.indeg==0)mq.push(&i);
-//    }
-//    while(!mq.empty()){
-//        Neuron* t=mq.front();
-//        mq.pop();
-//        if(t->indeg==0)return false;
-//        if(t->isleaf!=nInput){
-//            t->_value+=t->_b;
-//            if(t->type==nSigmoid )t->_value=sigmod(t->_value);
-//            else if(t->type== nRelu )t->_value=relu(t->_value);
-//            else if(t->type== nTanh)t->_value=tanh(t->_value);
-//        }
-//        for(auto e:t->adjedge){
-//            FNN->_neurons[neumap[_weights[e]._to]]._value+=(_weights[e]._weight)*t->_value;
-//            if(!(--FNN->_neurons[neumap[_weights[e]._to]].indeg))mq.push(&_neurons[neumap[_weights[e]._to]]);
-//        }
-//    }
     return true;
 }
 

@@ -3,7 +3,7 @@
 #include<cmath>
 bool Graph::add_neuron(Neuron &&nuro)
 {
-    nuro.isleaf=nInput;
+    nuro.isleaf=(nuro.type == nTarget ? nOutput : nInput);
     nuro.id = ++_neuron_id;
     nuro.indeg=0;
     this->_neurons.append(std::move(nuro));
@@ -31,9 +31,9 @@ bool Graph::add_link(Weight && wigh){
         return false;
     wigh.id=++this->_weight_id;
     this->atNeuronID(wigh._to).indeg++;
-    if(this->atNeuronID(wigh._to).type==nTarget)
-        this->atNeuronID(wigh._from).isleaf=nOutput;
-    else if(this->atNeuronID(wigh._to).isleaf==nInput)
+//    if(this->atNeuronID(wigh._to).type==nTarget)
+//        this->atNeuronID(wigh._from).isleaf=nOutput;
+    if(this->atNeuronID(wigh._to).isleaf==nInput)
         this->atNeuronID(wigh._to).isleaf=nHidden;
     this->atNeuronID(wigh._to).rev_adjedge.push_back(wigh.id);
     this->atNeuronID(wigh._from).adjedge.push_back(wigh.id);

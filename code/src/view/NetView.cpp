@@ -167,26 +167,37 @@ void NetView::paintNeurons(QPainter *painter)
             painter->setBrush(QBrush(n_color, Qt::Dense7Pattern));
             break;
         case nOutput:
-            painter->setBrush(QBrush(n_color, Qt::HorPattern));
+            painter->setBrush(QBrush(n_color, Qt::Dense7Pattern));
             break;
         default:
             break;
         }
         painter->drawEllipse(shape_neurons.at(i));
 
-        painter->drawText(newQRectF(
-                             shape_neurons.at(i).center(),
-                             20),
-                         Qt::AlignCenter,
-                         QString::number(
-                             this->FNN->_neurons.at(i)._value,
-                             10, 2));
 
         if (this->FNN->_neurons.at(i).type == nTarget) {
             QRectF outer = shape_neurons.at(i);
             outer.setTopLeft(QPointF(outer.left() - 3, outer.top() - 3));
             outer.setBottomRight(QPointF(outer.right() + 3, outer.bottom() + 3));
             painter->drawEllipse(outer);
+            QString disptext =
+                    QString::number(this->FNN->_neurons.at(i)._targetvalue, 10, 2)
+                    + "\n"
+                    + QString::number(this->FNN->_neurons.at(i)._value, 10, 2);
+            painter->drawText(newQRectF(
+                                 shape_neurons.at(i).center(),
+                                 24),
+                             Qt::AlignCenter,
+                             disptext);
+        }
+        else {
+            painter->drawText(newQRectF(
+                                 shape_neurons.at(i).center(),
+                                 20),
+                             Qt::AlignCenter,
+                             QString::number(
+                                 this->FNN->_neurons.at(i)._value,
+                                 10, 2));
         }
         if (selected_neuron == this->FNN->_neurons.at(i).id) {
             QRectF outer = shape_neurons.at(i);
