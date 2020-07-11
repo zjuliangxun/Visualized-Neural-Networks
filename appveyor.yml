@@ -41,10 +41,14 @@ after_build:
   - dir
   - cd ..
   - dir
+  - cd ..
+  - dir
   - cd %APPVEYOR_BUILD_FOLDER%
+  - dir
 
 artifacts:
   - path: release\Visualized_Neural_Networks.exe
+  - name: $(releaseName)
 
 deploy:
   release: releaseName
