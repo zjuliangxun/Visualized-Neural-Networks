@@ -34,13 +34,13 @@ after_build:
   - if "%APPVEYOR_REPO_TAG%"=="true" windeployqt release\Visualized_Neural_Networks.exe --qmldir %QTDIR%\qml
 
 artifacts:
-  - path: code/src/release/Visualized_Neural_Networks.exe
+  - path: code/src/release
 
 deploy:
-  release: $(releaseName)
+  release: Visualized Neural Networks
   provider: GitHub
   auth_token: $(GITHUB_OAUTH_TOKEN)
-  description: 'Visualized Neural Networks Release $(version)'
+  description: "Visualized Neural Networks release version."
   draft: false
   prerelease: false
   on:
