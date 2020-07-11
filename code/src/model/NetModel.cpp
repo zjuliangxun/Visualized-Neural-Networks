@@ -6,6 +6,8 @@
 
 NetModel::NetModel(){
     this->FNN=make_shared<Graph>();
+    this->loss_func = lossL2;
+    this->learning_rate = 0.01;
 }
 
 std::function<bool(Neuron&&)> NetModel::get_add_neuron_command() {
@@ -127,6 +129,36 @@ bool NetModel::calculate_forward() {
     return true;
 }
 
+bool NetModel::calculate_gradient()
+{
+    for (int i = 0; i != FNN->_weights.size(); ++i) {
+        int toID = FNN->_weights.at(i)._to;
+        int fromID = FNN->_weights.at(i)._from;
+        NeuronType t = FNN->atNeuronID(toID).type;
+        double gradient = 1.0;
+        switch (t) {
+        case nSigmoid:
+            gradient = dsigmod(FNN->atNeuronID(toID)._value);
+            break;
+        case nRelu:
+            gradient = drelu(FNN->atNeuronID(toID)._value);
+            break;
+        case nTanh:
+            gradient = dtanh(FNN->atNeuronID(toID)._value);
+            break;
+        case nTarget:
+            gradient = dloss(FNN->atNeuronID(toID)._value,
+                             FNN->atNeuronID(toID)._targetvalue,
+                             loss_func);
+            break;
+        default:
+            break;
+        }
+        gradient *= FNN->atNeuronID(fromID)._value;
+        FNN->_weights[i]._gradient = gradient;
+    }
+    return true;
+}
 
 bool NetModel::backprop(){
 //    //应该在model中写出来

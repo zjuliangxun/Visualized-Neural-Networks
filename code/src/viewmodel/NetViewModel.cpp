@@ -64,5 +64,11 @@ Command NetViewModel::get_calculate_forward_command(){
     };
 }
 
+Command NetViewModel::get_calculate_gradient_command(){
+    return [this](std::any t)->bool{
+        return this->m_NetM->calculate_gradient();
+    };
+}
+
 
 

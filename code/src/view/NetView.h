@@ -40,6 +40,7 @@ public:
     void set_change_weight_command(Command&&);  // commit: addvalue
 
     void set_calculate_forward_command(Command&&);  // commit: addcalcforward
+    void set_calculate_gradient_command(Command&&);
 
 	//ATTACH DATA AND MODELS
     void set_FNN(std::shared_ptr<Graph>);
@@ -58,6 +59,7 @@ private slots:
 	void target_button_clicked();
 
     void calc_forward_clicked();    // commit: addcalcforward
+    void calc_gradient_clicked();    // commit: addcalcforward
 
     void change_neuron_value(QPair<int, double>);
     void change_weight_value(QPair<int, double>);
@@ -75,6 +77,7 @@ private:
     Command change_weight_command;  // commit: addvalue
 
     Command calculate_forward_command;  // commit: addcalcforward
+    Command calculate_gradient_command;  // commit: addcalcforward
 
 	// edit state
 	EditMode edit_mode;
