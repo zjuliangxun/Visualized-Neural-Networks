@@ -6,6 +6,8 @@
 
 NetModel::NetModel(){
     this->FNN=make_shared<Graph>();
+    this->loss_func = lossL2;
+    this->learning_rate = 0.1;
 }
 
 std::function<bool(Neuron&&)> NetModel::get_add_neuron_command() {
@@ -127,8 +129,113 @@ bool NetModel::calculate_forward() {
     return true;
 }
 
+bool NetModel::calculate_gradient()
+{
+    for (int i = 0; i != FNN->_neurons.size(); ++i) {
+        NeuronType t = FNN->_neurons.at(i).type;
+        double gradient = 1.0;
+        switch (t) {
+        case nSigmoid:
+            gradient = dsigmod(FNN->_neurons.at(i)._value);
+            break;
+        case nRelu:
+            gradient = drelu(FNN->_neurons.at(i)._value);
+            break;
+        case nTanh:
+            gradient = dtanh(FNN->_neurons.at(i)._value);
+            break;
+        case nTarget:
+            gradient = dloss(FNN->_neurons.at(i)._value,
+                             FNN->_neurons.at(i)._targetvalue,
+                             loss_func);
+            break;
+        default:
+            break;
+        }
+        FNN->_neurons[i]._grad = gradient;
+    }
+    for (int i = 0; i != FNN->_weights.size(); ++i) {
+        int fromID = FNN->_weights.at(i)._from;
+        double gradient = 1.0;
+        gradient = FNN->atNeuronID(fromID)._value;
+        FNN->_weights[i]._gradient = gradient;
+    }
+    return true;
+}
 
-bool NetModel::backprop(){
+bool NetModel::propagate_gradient()
+{
+    QVector<double> accumulate_grad(FNN->_neurons.size());
+    QVector<int> calculated_out(FNN->_neurons.size());
+    QVector<bool> calculated(FNN->_neurons.size());
+    int cnt = 0;
+    for (int i = 0; i != FNN->_neurons.size(); ++i) {
+        if (FNN->_neurons[i].isleaf == nInput)
+            ++cnt;
+        calculated[i] = false;
+        calculated_out[i] = 0;
+        accumulate_grad[i] = 0;
+    }
+    while (cnt != FNN->_neurons.size()) {
+        for (int i = 0; i != FNN->_neurons.size(); ++i) {
+            if (FNN->_neurons.at(i).isleaf == nInput)
+                continue;
+            if (calculated_out[i] == FNN->_neurons.at(i).outdeg
+                    && !calculated[i]) {
+                if (FNN->_neurons.at(i).isleaf != nOutput)
+                    FNN->_neurons[i]._grad *= accumulate_grad[i];
+                calculated[i] = true;
+                ++cnt;
+                for (auto e: FNN->_neurons[i].rev_adjedge) {
+                    int fromID = FNN->atWeightID(e)._from;
+                    for (int j = 0; j != FNN->_neurons.size(); ++j) {
+                        if (FNN->_neurons[j].id == fromID) {
+                            FNN->atWeightID(e)._gradient
+                                    *= FNN->_neurons[i]._grad;
+                            calculated_out[j]++;
+                            accumulate_grad[j]
+                                    += (FNN->_neurons[i]._grad
+                                    * FNN->atWeightID(e)._weight);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool NetModel::update_weights()
+{
+    for (int i = 0; i != FNN->_weights.size(); ++i) {
+        FNN->_weights[i]._weight -=
+                learning_rate * FNN->_weights.at(i)._gradient;
+        FNN->_weights[i]._gradient = 0;
+    }
+    for (int i = 0; i != FNN->_neurons.size(); ++i) {
+        FNN->_neurons[i]._grad = 0;
+        // FNN->_neurons[i]._b
+        // neuron update: if b is used, then need to update it
+    }
+    return true;
+}
+
+bool NetModel::backprop(int *step){
+    if (!calculate_gradient()) {
+        *step = 1;
+        return false;
+    }
+    if (!propagate_gradient()) {
+        *step = 2;
+        return false;
+    }
+    if (!update_weights()) {
+        *step = 3;
+        return false;
+    }
+    *step = 0;
+    return true;
 //    //应该在model中写出来
 //    std::vector<double> tag;//默认按照添加output的顺序去赋值
 //    double pace=0.05;//learn rate
@@ -166,6 +273,5 @@ bool NetModel::backprop(){
 //    for(auto w:_weights){
 //        w._weight+=pace*(_neurons[neumap[w._to]].grad)*(_neurons[neumap[w._from]]._value);
 //    }
-    return true;
 }
 

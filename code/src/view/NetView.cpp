@@ -2,7 +2,6 @@
 #include <cmath>
 
 #include "NetView.h"
-#include "NeuronView.h"
 #include "ui_NetView.h"
 #include "utils.h"
 
@@ -86,6 +85,10 @@ NetView::NetView(QWidget* parent)
     connect(addNeuronTargetAction, SIGNAL(triggered()), this, SLOT(target_button_clicked()));
 
     connect(ui->actionForward, SIGNAL(triggered()), this, SLOT(calc_forward_clicked()));
+    connect(ui->actionGradient_calculate, SIGNAL(triggered()), this, SLOT(calc_gradient_clicked()));
+    connect(ui->actionGradient_propagate, SIGNAL(triggered()), this, SLOT(prop_gradient_clicked()));
+    connect(ui->actionUpdate_weights, SIGNAL(triggered()), this, SLOT(update_weights_clicked()));
+    connect(ui->actionRun_all, SIGNAL(triggered()), this, SLOT(backprop_clicked()));
 
     // initialize internal states
     selected_neuron = -1;
@@ -362,7 +365,10 @@ void NetView::mouseDoubleClickEvent(QMouseEvent* e)
                     SIGNAL(sendData(QPair<int, double>)),
                     this,
                     SLOT(change_neuron_value(QPair<int, double>)));
-            neuronView->setValue(this->FNN->_neurons.at(i)._value);
+            if (this->FNN->_neurons.at(i).type == nTarget)
+                neuronView->setValue(this->FNN->_neurons.at(i)._targetvalue);
+            else
+                neuronView->setValue(this->FNN->_neurons.at(i)._value);
             neuronView->setID(this->FNN->_neurons.at(i).id);
             if (neuronView->exec() == QDialog::Accepted) {
                 update();
@@ -437,6 +443,19 @@ void NetView::set_change_weight_command(Command &&cmd) {
 void NetView::set_calculate_forward_command(Command &&cmd) {
     this->calculate_forward_command = cmd;
 }
+void NetView::set_calculate_gradient_command(Command &&cmd) {
+    this->calculate_gradient_command = cmd;
+}
+void NetView::set_propagate_gradient_command(Command &&cmd) {
+    this->propagate_gradient_command = cmd;
+}
+void NetView::set_update_weights_command(Command &&cmd) {
+    this->update_weights_command = cmd;
+}
+void NetView::set_backprop_command(Command &&cmd) {
+    this->backprop_command = cmd;
+}
+
 
 /* Binding Notifications */
 Notification NetView::tell_update_view_notification() {
@@ -501,6 +520,50 @@ void NetView::calc_forward_clicked()
 {
     int flag;
     bool calc_success = calculate_forward_command(&flag);
+    if (calc_success) {
+        update();
+    }
+    else {
+        /* check */
+    }
+}
+void NetView::calc_gradient_clicked()
+{
+    int flag;
+    bool calc_success = calculate_gradient_command(&flag);
+    if (calc_success) {
+        update();
+    }
+    else {
+        /* check */
+    }
+}
+void NetView::prop_gradient_clicked()
+{
+    int flag;
+    bool calc_success = propagate_gradient_command(&flag);
+    if (calc_success) {
+        update();
+    }
+    else {
+        /* check */
+    }
+}
+void NetView::update_weights_clicked()
+{
+    int flag;
+    bool calc_success = update_weights_command(&flag);
+    if (calc_success) {
+        update();
+    }
+    else {
+        /* check */
+    }
+}
+void NetView::backprop_clicked()
+{
+    int flag;
+    bool calc_success = backprop_command(&flag);
     if (calc_success) {
         update();
     }
