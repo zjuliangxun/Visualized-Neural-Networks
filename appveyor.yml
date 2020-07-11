@@ -35,6 +35,7 @@ after_build:
 
 artifacts:
   - path: code/src/release
+    name: $(releaseName)
 
 deploy:
   release: Visualized Neural Networks
