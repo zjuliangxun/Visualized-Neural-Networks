@@ -24,6 +24,8 @@ public:
     Command get_calculate_forward_command();
     Command get_calculate_gradient_command();
     Command get_propagate_gradient_command();
+    Command get_update_weights_command();
+    Command get_backprop_command();
 
 	//EXPOSE ATTR
     std::shared_ptr<Graph> get_FNN();

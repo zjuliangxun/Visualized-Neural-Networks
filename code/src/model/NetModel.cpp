@@ -7,7 +7,7 @@
 NetModel::NetModel(){
     this->FNN=make_shared<Graph>();
     this->loss_func = lossL2;
-    this->learning_rate = 0.01;
+    this->learning_rate = 0.1;
 }
 
 std::function<bool(Neuron&&)> NetModel::get_add_neuron_command() {
@@ -206,7 +206,36 @@ bool NetModel::propagate_gradient()
     return true;
 }
 
-bool NetModel::backprop(){
+bool NetModel::update_weights()
+{
+    for (int i = 0; i != FNN->_weights.size(); ++i) {
+        FNN->_weights[i]._weight -=
+                learning_rate * FNN->_weights.at(i)._gradient;
+        FNN->_weights[i]._gradient = 0;
+    }
+    for (int i = 0; i != FNN->_neurons.size(); ++i) {
+        FNN->_neurons[i]._grad = 0;
+        // FNN->_neurons[i]._b
+        // neuron update: if b is used, then need to update it
+    }
+    return true;
+}
+
+bool NetModel::backprop(int *step){
+    if (!calculate_gradient()) {
+        *step = 1;
+        return false;
+    }
+    if (!propagate_gradient()) {
+        *step = 2;
+        return false;
+    }
+    if (!update_weights()) {
+        *step = 3;
+        return false;
+    }
+    *step = 0;
+    return true;
 //    //应该在model中写出来
 //    std::vector<double> tag;//默认按照添加output的顺序去赋值
 //    double pace=0.05;//learn rate
@@ -244,6 +273,5 @@ bool NetModel::backprop(){
 //    for(auto w:_weights){
 //        w._weight+=pace*(_neurons[neumap[w._to]].grad)*(_neurons[neumap[w._from]]._value);
 //    }
-    return true;
 }
 

@@ -75,6 +75,17 @@ Command NetViewModel::get_propagate_gradient_command(){
         return this->m_NetM->propagate_gradient();
     };
 }
+Command NetViewModel::get_update_weights_command(){
+    return [this](std::any t)->bool{
+        return this->m_NetM->update_weights();
+    };
+}
+Command NetViewModel::get_backprop_command(){
+    return [this](std::any t)->bool{
+        int *p = std::any_cast<int*>(t);
+        return this->m_NetM->backprop(p);
+    };
+}
 
 
 
