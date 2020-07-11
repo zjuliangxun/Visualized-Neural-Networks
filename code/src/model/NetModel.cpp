@@ -66,13 +66,15 @@ bool NetModel::estimate_circle(int src, int dst){
 }
 
 bool NetModel::change_neruo(int id, double value){
-    if(this->FNN->_neurons[id-1].isleaf==nHidden) return false;
-    else this->FNN->_neurons[id-1]._value=value;
+    if(this->FNN->atNeuronID(id).isleaf==nHidden) return false;
+    else if (this->FNN->atNeuronID(id).type==nTarget)
+        this->FNN->atNeuronID(id)._targetvalue=value;
+    else this->FNN->atNeuronID(id)._value=value;
     return true;
 }
 
 bool NetModel::change_weight(int id, double value){
-    this->FNN->_weights[id-1]._weight=value;
+    this->FNN->atWeightID(id)._weight=value;
     return true;
 }
 
