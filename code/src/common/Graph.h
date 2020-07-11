@@ -13,6 +13,7 @@ class Graph {
 private:
     int _neuron_id;
     int _weight_id;
+
 public:
 	QVector<Neuron> _neurons;
 	QVector<Weight> _weights;
@@ -20,15 +21,8 @@ public:
     bool add_neuron(Neuron&&);
     bool add_link(Weight && wigh);
     // return whether there exists loop
-    bool topo_sort();
-    bool backprop();
-private:
-    double sigmod(double v);
-    double dsigmod(double v);
-    double tanh(double x);
-    double dtanh(double outx);
-    double relu(double x);
-    double drelu(double x);
+    Neuron& atNeuronID(int);
+    Weight& atWeightID(int);
 };
 
 #endif // !GRAPH_H

@@ -60,7 +60,7 @@ Command NetViewModel::get_change_weight_command(){
 
 Command NetViewModel::get_calculate_forward_command(){
     return [this](std::any t)->bool{
-        return this->get_FNN()->topo_sort();
+        return this->m_NetM->calculate_forward();
     };
 }
 
