@@ -23,6 +23,9 @@ App::App()
     view->set_backprop_command(viewmodel->get_backprop_command());
     view->set_delete_weight_command(viewmodel->get_delete_weight_command());
     view->set_delete_neuron_command(viewmodel->get_delete_neuron_command());
+//    view->set_change_learning_rate_command(viewmodel->get_change_learning_rate_command());
+//    view->set_change_loss_command(viewmodel->get_change_loss_command());
+//    view->set_demand_config_command(viewmodel->get_demand_config_command());
 
 	// viewmodel
     viewmodel->AddNotification(view->tell_update_view_notification());//add notification

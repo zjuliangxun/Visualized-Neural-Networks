@@ -27,12 +27,26 @@
     <property name="title">
      <string>文件</string>
     </property>
+    <addaction name="actionConfigure"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>编辑</string>
     </property>
+    <widget class="QMenu" name="menuAdd_2">
+     <property name="title">
+      <string>Add</string>
+     </property>
+     <addaction name="actionPlain_Neuron_3"/>
+     <addaction name="actionSigmoid_Neuron"/>
+     <addaction name="actionRelu_Neuron"/>
+     <addaction name="actionTanh_Neuron"/>
+    </widget>
     <addaction name="actionDelete"/>
+    <addaction name="separator"/>
+    <addaction name="menuAdd_2"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -50,11 +64,16 @@
     </widget>
     <addaction name="actionForward"/>
     <addaction name="menuBackpropagation"/>
+    <addaction name="separator"/>
+    <addaction name="actionRun_Update"/>
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
      <string>帮助</string>
     </property>
+    <addaction name="actionAbout_2"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout_3"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -100,6 +119,64 @@
   <action name="actionDelete">
    <property name="text">
     <string>Delete</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actionConfigure">
+   <property name="text">
+    <string>Configure</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionPlain_Neuron">
+   <property name="text">
+    <string>Plain Neuron</string>
+   </property>
+  </action>
+  <action name="actionPlain_Neuron_2">
+   <property name="text">
+    <string>Plain Neuron</string>
+   </property>
+  </action>
+  <action name="actionPlain_Neuron_3">
+   <property name="text">
+    <string>Plain Neuron</string>
+   </property>
+  </action>
+  <action name="actionSigmoid_Neuron">
+   <property name="text">
+    <string>Sigmoid</string>
+   </property>
+  </action>
+  <action name="actionRelu_Neuron">
+   <property name="text">
+    <string>Relu</string>
+   </property>
+  </action>
+  <action name="actionTanh_Neuron">
+   <property name="text">
+    <string>Tanh</string>
+   </property>
+  </action>
+  <action name="actionRun_Update">
+   <property name="text">
+    <string>Iterate</string>
+   </property>
+  </action>
+  <action name="actionAbout_2">
+   <property name="text">
+    <string>Tutorial</string>
+   </property>
+  </action>
+  <action name="actionAbout_3">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

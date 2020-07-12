@@ -65,6 +65,8 @@ NetView::NetView(QWidget* parent)
     connect(ui->actionUpdate_weights, SIGNAL(triggered()), this, SLOT(update_weights_clicked()));
     connect(ui->actionRun_all, SIGNAL(triggered()), this, SLOT(backprop_clicked()));
     connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(delete_button_clicked()));
+    connect(ui->actionConfigure, SIGNAL(triggered()), this, SLOT(enter_config()));
+
     // initialize internal states
     selected_neuron = -1;
     selected_weight = -1;
@@ -72,6 +74,7 @@ NetView::NetView(QWidget* parent)
     drag_mode = noDrag;
     neuronView = nullptr;
     weightView = nullptr;
+    configView = nullptr;
 }
 
 NetView::~NetView()
@@ -285,37 +288,47 @@ void NetView::mouseMoveEvent(QMouseEvent* e)
 
 /* Binding Commands */
 void NetView::set_add_neuron_command(Command&& cmd) {
-    this->add_neuron_command = cmd;
+    this->add_neuron_command = std::move(cmd);
 }
 void NetView::set_connect_command(Command&& cmd) {
-    this->connect_command = cmd;
+    this->connect_command = std::move(cmd);
 }
 void NetView::set_change_neuron_command(Command &&cmd) {
-    this->change_neuron_command = cmd;
+    this->change_neuron_command = std::move(cmd);
 }
 void NetView::set_change_weight_command(Command &&cmd) {
-    this->change_weight_command = cmd;
+    this->change_weight_command = std::move(cmd);
 }
 void NetView::set_calculate_forward_command(Command &&cmd) {
-    this->calculate_forward_command = cmd;
+    this->calculate_forward_command = std::move(cmd);
 }
 void NetView::set_calculate_gradient_command(Command &&cmd) {
-    this->calculate_gradient_command = cmd;
+    this->calculate_gradient_command = std::move(cmd);
 }
 void NetView::set_propagate_gradient_command(Command &&cmd) {
-    this->propagate_gradient_command = cmd;
+    this->propagate_gradient_command = std::move(cmd);
 }
 void NetView::set_update_weights_command(Command &&cmd) {
-    this->update_weights_command = cmd;
+    this->update_weights_command = std::move(cmd);
 }
 void NetView::set_backprop_command(Command &&cmd) {
-    this->backprop_command = cmd;
+    this->backprop_command = std::move(cmd);
 }
 void NetView::set_delete_weight_command(Command &&cmd) {
-    this->delete_weight_command = cmd;
+    this->delete_weight_command = std::move(cmd);
 }
 void NetView::set_delete_neuron_command(Command &&cmd) {
-    this->delete_neuron_command = cmd;
+    this->delete_neuron_command = std::move(cmd);
+}
+void NetView::set_change_learning_rate_command(Command &&cmd) {
+    this->change_learning_rate_command = std::move(cmd);
+}
+void NetView::set_change_loss_command(Command &&cmd) {
+    this->change_loss_command = std::move(cmd);
+}
+void NetView::set_demand_config_command(Command &&cmd)
+{
+    this->demand_config_command = std::move(cmd);
 }
 
 
@@ -391,6 +404,19 @@ void NetView::change_weight_value(QPair<int, double> data)
 {
     change_weight_command(data);
 }
+void NetView::change_learning_rate(double x)
+{
+    change_learning_rate_command(x);
+}
+void NetView::change_loss(QString s)
+{
+    change_loss_command(s);
+}
+void NetView::change_config(QPair<double, QString> config)
+{
+    change_learning_rate(config.first);
+    change_loss(config.second);
+}
 
 /* Menu Reaction */
 void NetView::calc_forward_clicked()
@@ -463,6 +489,23 @@ void NetView::delete_button_clicked()
         update();
     else {
         /**/
+    }
+}
+void NetView::enter_config()
+{
+    configView = new ConfigView;
+    connect(configView,
+            SIGNAL(sendData),
+            this,
+            SLOT(change_config()));
+    QPair<double, QString> current_config;
+    demand_config_command(&current_config);
+    configView->setValue(current_config.first, current_config.second);
+    if (configView->exec() == QDialog::Accepted) {
+        update();
+    }
+    else {
+        /* error */
     }
 }
 
