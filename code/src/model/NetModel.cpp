@@ -61,16 +61,15 @@ bool NetModel::estimate_circle(int src, int dst){
     node.push(dst);
     Neuron nuro;
     while(!node.empty()){
-        int no=node.top()-1;
+        int no=node.top();
         if(node.top()==src) return true;
-        nuro=this->FNN->_neurons[no];
-        int i;
+        nuro=this->FNN->atNeuronID(no);
         node.pop();
-        auto itor=nuro.adjedge.begin();
-        for(i=0;i<nuro.adjedge.size();i++){
-            if(this->FNN->_weights[*itor-1]._to==dst&&this->FNN->_weights[*itor-1]._from==src) return true;
-            node.push(this->FNN->_weights[*itor-1]._to);
-            itor++;
+        for (auto itor=nuro.adjedge.begin();
+             itor != nuro.adjedge.end(); ++itor){
+            if(this->FNN->atWeightID(*itor)._to==dst
+                    && this->FNN->atWeightID(*itor)._from==src) return true;
+            node.push(this->FNN->atWeightID(*itor)._to);
         }
     }
     return false;

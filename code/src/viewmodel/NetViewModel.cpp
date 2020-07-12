@@ -101,7 +101,7 @@ Command NetViewModel::get_delete_weight_command(){
     };
 }
 
-Command NetViewModel::get_delete_neurons_command(){
+Command NetViewModel::get_delete_neuron_command(){
     return [this](std::any t)->bool{
         int g=std::any_cast<int>(t);
         return this->m_NetM->delete_neuron(g);
