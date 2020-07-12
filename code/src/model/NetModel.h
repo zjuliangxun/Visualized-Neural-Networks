@@ -39,7 +39,8 @@ public:
     bool calculate_gradient();
     bool propagate_gradient();
     bool update_weights();   // according to learning_rate
-    bool backprop(int*);        // combine gradient calculate&update weight
+    bool backprop(int*);    // combine gradient calculate&update weight
+    bool delete_weight(int id);
 //	void move(int);
 };
 
