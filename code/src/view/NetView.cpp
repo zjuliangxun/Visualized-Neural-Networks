@@ -480,9 +480,15 @@ void NetView::set_delete_neuron_command(Command &&cmd) {
 
 /* Binding Notifications */
 Notification NetView::tell_update_view_notification() {
-	return [this](uint32_t) {
+    return [this](uint32_t) {
         update();
 	};
+}
+Notification NetView::tell_delete_weights_notification() {
+    return [this](uint32_t) {
+        check_FNN();
+        update();
+    };
 }
 
 /* Toolbar Reaction */
@@ -602,9 +608,11 @@ void NetView::delete_button_clicked()
     bool success = true;
     if (selected_neuron != -1) {
         success = delete_neuron_command(selected_neuron);
+        selected_neuron = -1;
     }
     else if (selected_weight != -1) {
         success = delete_weight_command(selected_weight);
+        selected_weight = -1;
     }
     if (success)
         update();
