@@ -28,6 +28,8 @@ public:
     Command get_backprop_command();
     Command get_delete_weight_command();
     Command get_delete_neuron_command();
+    Command get_change_learning_rate_command();
+    Command get_change_loss_command();
     Command get_demand_config_command();
     //EXPOSE ATTR
     std::shared_ptr<Graph> get_FNN();

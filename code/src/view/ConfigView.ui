@@ -6,18 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>540</width>
-    <height>320</height>
+    <width>600</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>设置</string>
   </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>250</y>
+     <x>210</x>
+     <y>320</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -26,24 +29,14 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit">
-   <property name="geometry">
-    <rect>
-     <x>190</x>
-     <y>80</y>
-     <width>113</width>
-     <height>21</height>
-    </rect>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
    </property>
   </widget>
   <widget class="QComboBox" name="comboBox">
    <property name="geometry">
     <rect>
-     <x>190</x>
-     <y>150</y>
+     <x>270</x>
+     <y>190</y>
      <width>131</width>
      <height>22</height>
     </rect>
@@ -62,8 +55,8 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>80</y>
+     <x>200</x>
+     <y>120</y>
      <width>72</width>
      <height>15</height>
     </rect>
@@ -72,11 +65,21 @@
     <string>学习率：</string>
    </property>
   </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>120</y>
+     <width>113</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>100</x>
-     <y>150</y>
+     <x>180</x>
+     <y>190</y>
      <width>72</width>
      <height>15</height>
     </rect>

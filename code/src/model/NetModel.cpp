@@ -307,6 +307,16 @@ bool NetModel::delete_neuron(int id){
     return true;
 }
 
+bool NetModel::change_learning_rate(double x)
+{
+    this->learning_rate = x;
+    return true;
+}
+bool NetModel::change_loss(LossFunc func)
+{
+    this->loss_func = func;
+    return true;
+}
 double NetModel::get_learning_rate(){
     return this->learning_rate;
 }

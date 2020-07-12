@@ -43,6 +43,8 @@ public:
     bool delete_weight(int id);
     bool delete_neuron(int id);
 //	void move(int);
+    bool change_learning_rate(double);
+    bool change_loss(LossFunc);
 
     double get_learning_rate();
     QString get_loss_func();

@@ -503,9 +503,9 @@ void NetView::enter_config()
 {
     configView = new ConfigView;
     connect(configView,
-            SIGNAL(sendData),
+            SIGNAL(sendData(QPair<double, QString>)),
             this,
-            SLOT(change_config()));
+            SLOT(change_config(QPair<double, QString>)));
     QPair<double, QString> current_config;
     demand_config_command(&current_config);
     configView->setValue(current_config.first, current_config.second);

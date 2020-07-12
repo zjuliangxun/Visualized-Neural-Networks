@@ -12,7 +12,6 @@ ConfigView::ConfigView(QWidget *parent)
     validator->setRange(-99.99, 99.99, 7);
     validator->setNotation(QDoubleValidator::StandardNotation);
     ui->lineEdit->setValidator(validator);
-
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(saveData()));
     connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(ignoreData()));
 }

@@ -117,3 +117,22 @@ Command NetViewModel::get_demand_config_command(){
         return true;
     };
 }
+
+Command NetViewModel::get_change_learning_rate_command() {
+    return [this](std::any t)->bool {
+        double x = std::any_cast<double>(t);
+        return this->m_NetM->change_learning_rate(x);
+    };
+}
+
+Command NetViewModel::get_change_loss_command() {
+    return [this](std::any t)->bool {
+        QString s = std::any_cast<QString>(t);
+        LossFunc f = lossL2;
+        if (s == "L1")
+            f = lossL1;
+        if (s == "L2")
+            f = lossL2;
+        return this->m_NetM->change_loss(f);
+    };
+}
