@@ -41,6 +41,7 @@ public:
     bool update_weights();   // according to learning_rate
     bool backprop(int*);    // combine gradient calculate&update weight
     bool delete_weight(int id);
+    bool delete_neuron(int id);
 //	void move(int);
 };
 
