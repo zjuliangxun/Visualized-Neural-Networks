@@ -26,6 +26,7 @@ SOURCES += \
     main.cpp \
     model/NetModel.cpp \
     model/math_utils.cpp \
+    view/ConfigView.cpp \
     view/NetView.cpp \
     view/NeuronView.cpp \
     view/WeightView.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
     common/neurons.h \
     common/weights.h \
     model/NetModel.h \
+    view/ConfigView.h \
     view/NetView.h \
     view/NeuronView.h \
     view/WeightView.h \
@@ -48,6 +50,7 @@ HEADERS += \
     viewmodel/NetViewModel.h
 
 FORMS += \
+    view/ConfigView.ui \
     view/NetView.ui \
     view/NeuronView.ui \
     view/WeightView.ui

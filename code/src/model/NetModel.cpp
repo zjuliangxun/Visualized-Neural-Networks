@@ -29,7 +29,11 @@ void NetModel::set_update_display_data_notification(Notification&& notification)
 
 bool NetModel::add_neuron(Neuron&& x)
 {
-    return this->FNN->add_neuron(std::move(x));
+    bool success = this->FNN->add_neuron(std::move(x));
+    if (success) {
+        this->Fire(NOTIF_CHANGE);
+    }
+    return success;
 }
 
 std::function<bool(int,int)>  NetModel::get_connect_command(){
@@ -44,7 +48,11 @@ bool NetModel::add_link(int src,int dst){
         Weight w;
         w._from=src;
         w._to=dst;
-        return this->FNN->add_link(std::move(w));
+        bool success = this->FNN->add_link(std::move(w));
+        if (success) {
+            this->Fire(NOTIF_CHANGE);
+        }
+        return success;
     }
 }
 
@@ -53,16 +61,15 @@ bool NetModel::estimate_circle(int src, int dst){
     node.push(dst);
     Neuron nuro;
     while(!node.empty()){
-        int no=node.top()-1;
+        int no=node.top();
         if(node.top()==src) return true;
-        nuro=this->FNN->_neurons[no];
-        int i;
+        nuro=this->FNN->atNeuronID(no);
         node.pop();
-        auto itor=nuro.adjedge.begin();
-        for(i=0;i<nuro.adjedge.size();i++){
-            if(this->FNN->_weights[*itor-1]._to==dst&&this->FNN->_weights[*itor-1]._from==src) return true;
-            node.push(this->FNN->_weights[*itor-1]._to);
-            itor++;
+        for (auto itor=nuro.adjedge.begin();
+             itor != nuro.adjedge.end(); ++itor){
+            if(this->FNN->atWeightID(*itor)._to==dst
+                    && this->FNN->atWeightID(*itor)._from==src) return true;
+            node.push(this->FNN->atWeightID(*itor)._to);
         }
     }
     return false;
@@ -73,11 +80,13 @@ bool NetModel::change_neruo(int id, double value){
     else if (this->FNN->atNeuronID(id).type==nTarget)
         this->FNN->atNeuronID(id)._targetvalue=value;
     else this->FNN->atNeuronID(id)._value=value;
+    this->Fire(NOTIF_DRAW);
     return true;
 }
 
 bool NetModel::change_weight(int id, double value){
     this->FNN->atWeightID(id)._weight=value;
+    this->Fire(NOTIF_DRAW);
     return true;
 }
 
@@ -126,6 +135,7 @@ bool NetModel::calculate_forward() {
             }
         }
     }
+    this->Fire(NOTIF_DRAW);
     return true;
 }
 
@@ -160,6 +170,7 @@ bool NetModel::calculate_gradient()
         gradient = FNN->atNeuronID(fromID)._value;
         FNN->_weights[i]._gradient = gradient;
     }
+    this->Fire(NOTIF_DRAW);
     return true;
 }
 
@@ -203,6 +214,7 @@ bool NetModel::propagate_gradient()
             }
         }
     }
+    this->Fire(NOTIF_DRAW);
     return true;
 }
 
@@ -218,6 +230,7 @@ bool NetModel::update_weights()
         // FNN->_neurons[i]._b
         // neuron update: if b is used, then need to update it
     }
+    this->Fire(NOTIF_DRAW);
     return true;
 }
 
@@ -235,84 +248,62 @@ bool NetModel::backprop(int *step){
         return false;
     }
     *step = 0;
+    this->Fire(NOTIF_DRAW);
     return true;
-//    //应该在model中写出来
-//    std::vector<double> tag;//默认按照添加output的顺序去赋值
-//    double pace=0.05;//learn rate
-//    //另外，图和neuron和weight最好都加个构造函数
-//    //
-//    for(auto i:_neurons){i.indeg=i.grad=0;}
-//    std::queue<Neuron*> mq;
-
-//    for(auto i:this->_neurons){
-//        for(auto e:i.rev_adjedge){
-//            _neurons[neumap[_weights[e]._to]].indeg++;
-//        }
-//    }
-//    for(auto i:_neurons){
-//        if(i.indeg==0){
-//            static int j=0;
-//            mq.push(&i);
-//            if(i.type==nSigmoid )i.grad=(tag[j++]-i._value)*dsigmod(i._value);//后半截是导数
-//            else if(i.type== nRelu )i.grad=(tag[j++]-i._value)*drelu(i._value);//后半截是导数
-//            else if(i.type== nTanh)i.grad=(tag[j++]-i._value)*dtanh(i._value);//后半截是导数
-//        }
-//    }
-//    while(!mq.empty()){
-//        Neuron* t=mq.front();
-//        mq.pop();
-//        if(t->indeg==0)return false;
-//        if(t->isleaf!=nOutput){
-//            t->grad*=dsigmod(t->_value);
-//        }
-//        for(auto e:t->rev_adjedge){
-//            _neurons[neumap[_weights[e]._from]].grad+=(_weights[e]._weight)*t->grad;
-//            if(!(--_neurons[neumap[_weights[e]._from]].indeg))mq.push(&_neurons[neumap[_weights[e]._from]]);
-//        }
-//    }
-//    for(auto w:_weights){
-//        w._weight+=pace*(_neurons[neumap[w._to]].grad)*(_neurons[neumap[w._from]]._value);
-//    }
 }
 
 bool NetModel::delete_weight(int id){
     Weight w = this->FNN->atWeightID(id);
-    Neuron src = this->FNN->atNeuronID(w._from);
-    Neuron dst = this->FNN->atNeuronID(w._to);
-    auto itor=this->FNN->_weights.begin();
-    int i,j;
-    for(i=0;i<this->FNN->_weights.size();i++){
-        if(itor->id==w.id){
-          auto its=src.adjedge.begin();
-          for(j=0;j<src.adjedge.size();j++){
-              if(*its==id) src.adjedge.erase(its);
-              else its++;
+    Neuron &src = this->FNN->atNeuronID(w._from);
+    Neuron &dst = this->FNN->atNeuronID(w._to);
+    auto itor = this->FNN->_weights.begin();
+    while (itor != this->FNN->_weights.end()){
+        if(itor->id==id){
+          for(auto its=src.adjedge.begin();
+              its != src.adjedge.end();++its){
+              if(*its==id) {
+                  src.adjedge.erase(its);
+                  src.outdeg--;
+                  break;
+              }
           }
-          auto itd=dst.rev_adjedge.begin();
-          for(j=0;j<dst.rev_adjedge.size();j++){
-              if(*itd==id) dst.rev_adjedge.erase(itd);
-              else itd++;
+          for(auto its=dst.rev_adjedge.begin();
+              its != dst.rev_adjedge.end();++its){
+              if(*its==id) {
+                  dst.rev_adjedge.erase(its);
+                  dst.indeg--;
+                  break;
+              }
           }
-          this->FNN->_weights.erase(itor);
-          if(!dst.rev_adjedge.size()) dst.isleaf=nInput;
+          if (dst.rev_adjedge.empty())
+              dst.isleaf = nInput;
+          itor = this->FNN->_weights.erase(itor);
+          this->Fire(NOTIF_CHANGE);
+
           return true;
         }
+        else
+            ++itor;
     }
     return false;
 }
 
 bool NetModel::delete_neuron(int id){
-    Neuron nro=this->FNN->atNeuronID(id);
-    auto it1=nro.adjedge.begin();
-    auto it2=nro.rev_adjedge.begin();
-    while(nro.adjedge.size()) delete_weight(*it1);
-    while(nro.rev_adjedge.size()) delete_weight(*it2);
-    auto it3=this->FNN->_neurons.begin();
-    int i;
-    for(i=0;i<this->FNN->_neurons.size();i++){
-        if(it3->id==id) this->FNN->_neurons.erase(it3);
-        else it3++;
+    Neuron &nro=this->FNN->atNeuronID(id);
+    while (!nro.adjedge.empty()) {
+        delete_weight(*(nro.adjedge.begin()));
     }
+    while (!nro.rev_adjedge.empty()) {
+        delete_weight(*(nro.rev_adjedge.begin()));
+    }
+    for (auto it = this->FNN->_neurons.begin();
+         it != this->FNN->_neurons.end(); ++it){
+        if(it->id==id) {
+            this->FNN->_neurons.erase(it);
+            break;
+        }
+    }
+    this->Fire(NOTIF_CHANGE);
     return true;
 }
 
