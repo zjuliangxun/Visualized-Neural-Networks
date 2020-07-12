@@ -87,5 +87,11 @@ Command NetViewModel::get_backprop_command(){
     };
 }
 
-
+Command NetViewModel::get_delete_weight_command(){
+    return [this](std::any t)->bool{
+        //int g=std::any_cast<int>(t);
+        //return this->m_NetM->delete_weight(g);
+        return true;
+    };
+}
 
