@@ -39,10 +39,11 @@
      <property name="title">
       <string>Add</string>
      </property>
-     <addaction name="actionPlain_Neuron_3"/>
+     <addaction name="actionPlain_Neuron"/>
      <addaction name="actionSigmoid_Neuron"/>
      <addaction name="actionRelu_Neuron"/>
      <addaction name="actionTanh_Neuron"/>
+     <addaction name="actionTarget"/>
     </widget>
     <addaction name="actionDelete"/>
     <addaction name="separator"/>
@@ -65,7 +66,7 @@
     <addaction name="actionForward"/>
     <addaction name="menuBackpropagation"/>
     <addaction name="separator"/>
-    <addaction name="actionRun_Update"/>
+    <addaction name="actionIterate"/>
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
@@ -134,21 +135,6 @@
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionPlain_Neuron">
-   <property name="text">
-    <string>Plain Neuron</string>
-   </property>
-  </action>
-  <action name="actionPlain_Neuron_2">
-   <property name="text">
-    <string>Plain Neuron</string>
-   </property>
-  </action>
-  <action name="actionPlain_Neuron_3">
-   <property name="text">
-    <string>Plain Neuron</string>
-   </property>
-  </action>
   <action name="actionSigmoid_Neuron">
    <property name="text">
     <string>Sigmoid</string>
@@ -164,7 +150,7 @@
     <string>Tanh</string>
    </property>
   </action>
-  <action name="actionRun_Update">
+  <action name="actionIterate">
    <property name="text">
     <string>Iterate</string>
    </property>
@@ -177,6 +163,16 @@
   <action name="actionAbout_3">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionPlain_Neuron">
+   <property name="text">
+    <string>Plain Neuron</string>
+   </property>
+  </action>
+  <action name="actionTarget">
+   <property name="text">
+    <string>Target</string>
    </property>
   </action>
  </widget>

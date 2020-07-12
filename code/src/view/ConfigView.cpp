@@ -52,6 +52,6 @@ QPair<double, QString> ConfigView::getValue()
     if (ui->comboBox->currentIndex() == 1) {
         func = "L1";
     }
-    QPair<double, double> param(value, func);
+    QPair<double, QString> param(value, func);
     return param;
 }

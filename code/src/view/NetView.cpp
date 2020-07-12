@@ -67,6 +67,14 @@ NetView::NetView(QWidget* parent)
     connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(delete_button_clicked()));
     connect(ui->actionConfigure, SIGNAL(triggered()), this, SLOT(enter_config()));
 
+    connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(exit_clicked()));
+    connect(ui->actionPlain_Neuron, SIGNAL(triggered()), this, SLOT(neuron_button_clicked()));
+    connect(ui->actionSigmoid_Neuron, SIGNAL(triggered()), this, SLOT(sigmoid_button_clicked()));
+    connect(ui->actionRelu_Neuron, SIGNAL(triggered()), this, SLOT(relu_button_clicked()));
+    connect(ui->actionTanh_Neuron, SIGNAL(triggered()), this, SLOT(tanh_button_clicked()));
+    connect(ui->actionTarget, SIGNAL(triggered()), this, SLOT(target_button_clicked()));
+    connect(ui->actionIterate, SIGNAL(triggered()), this, SLOT(iterate_clicked()));
+
     // initialize internal states
     selected_neuron = -1;
     selected_weight = -1;
@@ -507,6 +515,17 @@ void NetView::enter_config()
     else {
         /* error */
     }
+}
+void NetView::exit_clicked()
+{
+    this->close();
+}
+void NetView::iterate_clicked()
+{
+    calc_forward_clicked();
+    calc_gradient_clicked();
+    prop_gradient_clicked();
+    update_weights_clicked();
 }
 
 /* Internal Functions */

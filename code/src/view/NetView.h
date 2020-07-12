@@ -84,6 +84,10 @@ private slots:
     void enter_config();
     void change_config(QPair<double, QString>);
 
+    void exit_clicked();
+    void iterate_clicked();
+
+
 private:
 	/*Ui::View *ui;*/
 	//MODELS AND DATA BIND
