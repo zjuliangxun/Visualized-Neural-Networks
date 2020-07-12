@@ -275,3 +275,30 @@ bool NetModel::backprop(int *step){
 //    }
 }
 
+bool NetModel::delete_weight(int id){
+    //this->FNN->_weights.clear();
+    /*Weight w = this->FNN->atWeightID(id);
+    Neuron src = this->FNN->atNeuronID(w._from);
+    Neuron dst = this->FNN->atNeuronID(w._to);
+    auto itor=this->FNN->_weights.begin();
+    int i,j;
+    for(i=0;i<this->FNN->_weights.size();i++){
+        if(itor->id==w.id){
+          auto its=src.adjedge.begin();
+          for(j=0;j<src.adjedge.size();j++){
+              if(*its==id) src.adjedge.erase(its);
+              its++;
+          }
+          auto itd=dst.rev_adjedge.begin();
+          for(j=0;j<dst.rev_adjedge.size();j++){
+              if(*itd==id) dst.rev_adjedge.erase(itd);
+              itd++;
+          }
+          this->FNN->_weights.erase(itor);
+          return true;
+        }
+    }*/
+    return true;
+}
+
+
