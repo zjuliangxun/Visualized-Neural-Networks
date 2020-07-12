@@ -51,31 +51,6 @@ NetView::NetView(QWidget* parent)
     addNeuronTargetAction->setIcon(QIcon(":/images/neuron_target.png"));
     tbar->addAction(addNeuronTargetAction);
 
-    /* display board */
-//    graphicsScene = new QGraphicsScene(this);
-//    graphicsView = new QGraphicsView(graphicsScene, this);
-//    graphicsView->setMouseTracking(true);
-//    graphicsView->setInteractive(true);
-//    graphicsView->setFixedSize(this->width(), this->height() - ui->menubar->height() - tbar->height());
-//    graphicsView->move(0, ui->menubar->height() + tbar->height());
-//    graphicsView->setStyleSheet("padding: 0px; border: 0px");
-
-//    Neuron tmp;
-//    tmp._value = 0.0;
-//    tmp.type = nTarget;
-
-//    QGraphicsItem *newitem = new NeuronItem(tmp, QPointF(100, 100));
-//    //QLineF line();
-//    //QGraphicsItem *tmptem = new QGraphicsLineItem(&line);
-//    newitem->show();
-//    newitem->setActive(true);
-//    newitem->setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-//    graphicsScene->addLine(0, 0, 100, 100);
-//    graphicsScene->addItem(newitem);
-//    graphicsView->update();
-//    delete newitem;
-
-
     // signal-slots connection
     connect(selectAction, SIGNAL(triggered()), this, SLOT(select_button_clicked()));
     connect(addNeuronNoneAction, SIGNAL(triggered()), this, SLOT(neuron_button_clicked()));
@@ -108,150 +83,18 @@ NetView::~NetView()
 void NetView::set_FNN(std::shared_ptr<Graph> pFNN)
 {
     this->FNN = pFNN;
+    for (int i = 0; i != pFNN->_neurons.size(); ++i) {
+        neuron_ids.append(pFNN->_neurons.at(i).id);
+    }
+    for (int i = 0; i != pFNN->_weights.size(); ++i) {
+        weight_ids.append(pFNN->_neurons.at(i).id);
+    }
 }
 void NetView::attach_ViewModel(std::shared_ptr <NetViewModel > refModel) noexcept {
 	this->m_NetVM = refModel;
 }
 std::shared_ptr <NetViewModel > NetView::detach_ViewModel() noexcept {
 	return std::shared_ptr <NetViewModel >(std::move(m_NetVM));
-}
-
-void NetView::paintNeurons(QPainter *painter)
-{
-    if (edit_mode == addNeuron) {
-        switch (current_neuron.type) {
-        case nNone:
-            painter->setPen(QPen(Qt::black, 1));
-            break;
-        case nSigmoid:
-            painter->setPen(QPen(Qt::darkRed, 1));
-            break;
-        case nRelu:
-            painter->setPen(QPen(Qt::darkGreen, 1));
-            break;
-        case nTanh:
-            painter->setPen(QPen(Qt::darkBlue, 1));
-            break;
-        case nTarget:
-            painter->setPen(QPen(Qt::black, 1));
-            break;
-        default:
-            painter->setPen(QPen(Qt::black, 1));
-            break;
-        }
-        painter->drawEllipse(shape_current_neuron);
-    }
-
-    QColor n_color;
-    for (int i = 0; i != shape_neurons.size(); ++i) {
-        switch (this->FNN->_neurons.at(i).type)
-        {
-        case nSigmoid:
-            n_color = Qt::darkRed;
-            break;
-        case nRelu:
-            n_color = Qt::darkGreen;
-            break;
-        case nTanh:
-            n_color = Qt::darkBlue;
-            break;
-        case nTarget:
-            n_color = Qt::black;
-            break;
-        default:
-            n_color = Qt::black;
-            break;
-        }
-        painter->setPen(QPen(n_color, 2));
-        switch (this->FNN->_neurons.at(i).isleaf) {
-        case nInput:
-            painter->setBrush(QBrush(n_color, Qt::NoBrush));
-            break;
-        case nHidden:
-            painter->setBrush(QBrush(n_color, Qt::Dense7Pattern));
-            break;
-        case nOutput:
-            painter->setBrush(QBrush(n_color, Qt::Dense7Pattern));
-            break;
-        default:
-            break;
-        }
-        painter->drawEllipse(shape_neurons.at(i));
-
-
-        if (this->FNN->_neurons.at(i).type == nTarget) {
-            QRectF outer = shape_neurons.at(i);
-            outer.setTopLeft(QPointF(outer.left() - 3, outer.top() - 3));
-            outer.setBottomRight(QPointF(outer.right() + 3, outer.bottom() + 3));
-            painter->drawEllipse(outer);
-            QString disptext =
-                    QString::number(this->FNN->_neurons.at(i)._targetvalue, 10, 2)
-                    + "\n"
-                    + QString::number(this->FNN->_neurons.at(i)._value, 10, 2);
-            painter->drawText(newQRectF(
-                                 shape_neurons.at(i).center(),
-                                 24),
-                             Qt::AlignCenter,
-                             disptext);
-        }
-        else {
-            painter->drawText(newQRectF(
-                                 shape_neurons.at(i).center(),
-                                 20),
-                             Qt::AlignCenter,
-                             QString::number(
-                                 this->FNN->_neurons.at(i)._value,
-                                 10, 2));
-        }
-        if (selected_neuron == this->FNN->_neurons.at(i).id) {
-            QRectF outer = shape_neurons.at(i);
-            outer.setTopLeft(QPointF(outer.left() - 4, outer.top() - 4));
-            outer.setBottomRight(QPointF(outer.right() + 4, outer.bottom() + 4));
-            painter->drawRect(outer);
-        }
-    }
-}
-void NetView::paintWeights(QPainter *painter)
-{
-    shape_weights.clear();
-    for (int i = 0; i != topology_weights.size(); ++i) {
-
-        painter->setPen(QPen(Qt::black, 1));
-        if (FNN->_weights.at(i).id == selected_weight)
-            painter->setPen(QPen(Qt::black, 2));
-        QPointF p1, p2;
-        for (int j = 0; j != this->FNN->_neurons.size(); ++j) {
-            if (this->FNN->_neurons.at(j).id == topology_weights.at(i).first)
-                p1 = shape_neurons.at(j).center();
-            if (this->FNN->_neurons.at(j).id == topology_weights.at(i).second)
-                p2 = shape_neurons.at(j).center();
-        }
-        QPointF dp;
-        dp.setX(p2.x() - p1.x());
-        dp.setY(p2.y() - p1.y());
-        double l = sqrt(dp.x() * dp.x() + dp.y() * dp.y());
-        p1.setX(p1.x() + dp.x() * _radius / l);
-        p1.setY(p1.y() + dp.y() * _radius / l);
-        p2.setX(p2.x() - dp.x() * _radius / l);
-        p2.setY(p2.y() - dp.y() * _radius / l);
-        shape_weights.append(QLineF(p1, p2));
-        painter->drawLine(QLineF(p1, p2));
-        painter->drawRect(newQRectF(p1, 4));    // from
-        painter->drawEllipse(newQRectF(p2, 3)); // to
-
-        // display weight and gradient
-        QPointF midp = (p1 + p2) / 2;
-        if (l > 4 * _radius)
-            painter->drawText(newQRectF(midp, 48),
-                              Qt::AlignCenter,
-                              QString::number(this->FNN->_weights.at(i)._weight, 10, 2)
-                              + QString("/")
-                              + QString::number(this->FNN->_weights.at(i)._gradient, 10, 2));
-    }
-    if (drag_mode == lineDrag) {
-        painter->setPen(QPen(Qt::black, 1));
-        painter->drawLine(shape_current_weight);
-    }
 }
 
 /* Define Events */
@@ -262,11 +105,9 @@ void NetView::paintEvent(QPaintEvent*)
     QPainter painter(&map);
     // paint neurons
     this->paintNeurons(&painter);
-    //painter.end();
     // paint weights
     this->paintWeights(&painter);
     painter.end();
-    //
     painter.begin(this);
     painter.drawPixmap(0, 0, map);
 }
@@ -484,7 +325,7 @@ Notification NetView::tell_update_view_notification() {
         update();
 	};
 }
-Notification NetView::tell_delete_weights_notification() {
+Notification NetView::tell_property_change_notification() {
     return [this](uint32_t) {
         check_FNN();
         update();
@@ -618,5 +459,230 @@ void NetView::delete_button_clicked()
         update();
     else {
         /**/
+    }
+}
+
+/* Internal Functions */
+void NetView::check_FNN_neurons()
+{
+    // check neurons (model delete)
+    auto iter1 = shape_neurons.begin();
+    auto iter2 = neuron_ids.begin();
+    while (iter1 != shape_neurons.end()) {
+        int id = *iter2;
+        bool found = false;
+        for (auto p = this->FNN->_neurons.begin();
+             p != this->FNN->_neurons.end(); ++p) {
+            if (p->id == id)
+                found = true;
+        }
+        if (!found) {
+            iter1 = shape_neurons.erase(iter1);
+            iter2 = neuron_ids.erase(iter2);
+        }
+        else {
+            ++iter1, ++iter2;
+        }
+    }
+    // check neurons (model add)
+    for (auto p = this->FNN->_neurons.begin();
+         p != this->FNN->_neurons.end(); ++p) {
+        int id = p->id;
+        bool found;
+        for (auto iter = neuron_ids.begin();
+             iter != neuron_ids.end(); ++iter) {
+            if (id == *iter)
+                found = true;
+            if (!found && *iter > id) { // no this id
+                neuron_ids.insert(iter, id);
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            neuron_ids.append(id);  // if no place to insert, then append
+    }
+}
+void NetView::check_FNN_weights()
+{
+    // check weights delete
+    auto iter1 = topology_weights.begin();
+    auto iter2 = weight_ids.begin();
+    while (iter1 != topology_weights.begin()) {
+        int id = *iter2;
+        bool found = false;
+        for (auto p = this->FNN->_weights.begin();
+             p != this->FNN->_weights.end(); ++p) {
+            if (p->id == id)
+                found = true;
+        }
+        if (!found) {
+            iter1 = topology_weights.erase(iter1);
+            iter2 = weight_ids.erase(iter2);
+        }
+        else {
+            ++iter1, ++iter2;
+        }
+    }
+    // check weights (model add)
+    for (auto p = this->FNN->_weights.begin();
+         p != this->FNN->_weights.end(); ++p) {
+        int id = p->id;
+        bool found;
+        for (auto iter = weight_ids.begin();
+             iter != weight_ids.end(); ++iter) {
+            if (id == *iter)
+                found = true;
+            if (!found && *iter > id) { // no this id
+                weight_ids.insert(iter, id);
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+            weight_ids.append(id);  // if no place to insert, then append
+    }
+}
+void NetView::check_FNN()
+{
+    check_FNN_neurons();
+    check_FNN_weights();
+}
+
+void NetView::paintNeurons(QPainter *painter)
+{
+    if (edit_mode == addNeuron) {
+        switch (current_neuron.type) {
+        case nNone:
+            painter->setPen(QPen(Qt::black, 1));
+            break;
+        case nSigmoid:
+            painter->setPen(QPen(Qt::darkRed, 1));
+            break;
+        case nRelu:
+            painter->setPen(QPen(Qt::darkGreen, 1));
+            break;
+        case nTanh:
+            painter->setPen(QPen(Qt::darkBlue, 1));
+            break;
+        case nTarget:
+            painter->setPen(QPen(Qt::black, 1));
+            break;
+        default:
+            painter->setPen(QPen(Qt::black, 1));
+            break;
+        }
+        painter->drawEllipse(shape_current_neuron);
+    }
+
+    QColor n_color;
+    for (int i = 0; i != shape_neurons.size(); ++i) {
+        switch (this->FNN->_neurons.at(i).type)
+        {
+        case nSigmoid:
+            n_color = Qt::darkRed;
+            break;
+        case nRelu:
+            n_color = Qt::darkGreen;
+            break;
+        case nTanh:
+            n_color = Qt::darkBlue;
+            break;
+        case nTarget:
+            n_color = Qt::black;
+            break;
+        default:
+            n_color = Qt::black;
+            break;
+        }
+        painter->setPen(QPen(n_color, 2));
+        switch (this->FNN->_neurons.at(i).isleaf) {
+        case nInput:
+            painter->setBrush(QBrush(n_color, Qt::NoBrush));
+            break;
+        case nHidden:
+            painter->setBrush(QBrush(n_color, Qt::Dense7Pattern));
+            break;
+        case nOutput:
+            painter->setBrush(QBrush(n_color, Qt::Dense7Pattern));
+            break;
+        default:
+            break;
+        }
+        painter->drawEllipse(shape_neurons.at(i));
+
+
+        if (this->FNN->_neurons.at(i).type == nTarget) {
+            QRectF outer = shape_neurons.at(i);
+            outer.setTopLeft(QPointF(outer.left() - 3, outer.top() - 3));
+            outer.setBottomRight(QPointF(outer.right() + 3, outer.bottom() + 3));
+            painter->drawEllipse(outer);
+            QString disptext =
+                    QString::number(this->FNN->_neurons.at(i)._targetvalue, 10, 2)
+                    + "\n"
+                    + QString::number(this->FNN->_neurons.at(i)._value, 10, 2);
+            painter->drawText(newQRectF(
+                                 shape_neurons.at(i).center(),
+                                 24),
+                             Qt::AlignCenter,
+                             disptext);
+        }
+        else {
+            painter->drawText(newQRectF(
+                                 shape_neurons.at(i).center(),
+                                 20),
+                             Qt::AlignCenter,
+                             QString::number(
+                                 this->FNN->_neurons.at(i)._value,
+                                 10, 2));
+        }
+        if (selected_neuron == this->FNN->_neurons.at(i).id) {
+            QRectF outer = shape_neurons.at(i);
+            outer.setTopLeft(QPointF(outer.left() - 4, outer.top() - 4));
+            outer.setBottomRight(QPointF(outer.right() + 4, outer.bottom() + 4));
+            painter->drawRect(outer);
+        }
+    }
+}
+void NetView::paintWeights(QPainter *painter)
+{
+    shape_weights.clear();
+    for (int i = 0; i != topology_weights.size(); ++i) {
+
+        painter->setPen(QPen(Qt::black, 1));
+        if (FNN->_weights.at(i).id == selected_weight)
+            painter->setPen(QPen(Qt::black, 2));
+        QPointF p1, p2;
+        for (int j = 0; j != this->FNN->_neurons.size(); ++j) {
+            if (this->FNN->_neurons.at(j).id == topology_weights.at(i).first)
+                p1 = shape_neurons.at(j).center();
+            if (this->FNN->_neurons.at(j).id == topology_weights.at(i).second)
+                p2 = shape_neurons.at(j).center();
+        }
+        QPointF dp;
+        dp.setX(p2.x() - p1.x());
+        dp.setY(p2.y() - p1.y());
+        double l = sqrt(dp.x() * dp.x() + dp.y() * dp.y());
+        p1.setX(p1.x() + dp.x() * _radius / l);
+        p1.setY(p1.y() + dp.y() * _radius / l);
+        p2.setX(p2.x() - dp.x() * _radius / l);
+        p2.setY(p2.y() - dp.y() * _radius / l);
+        shape_weights.append(QLineF(p1, p2));
+        painter->drawLine(QLineF(p1, p2));
+        painter->drawRect(newQRectF(p1, 4));    // from
+        painter->drawEllipse(newQRectF(p2, 3)); // to
+
+        // display weight and gradient
+        QPointF midp = (p1 + p2) / 2;
+        if (l > 4 * _radius)
+            painter->drawText(newQRectF(midp, 48),
+                              Qt::AlignCenter,
+                              QString::number(this->FNN->_weights.at(i)._weight, 10, 2)
+                              + QString("/")
+                              + QString::number(this->FNN->_weights.at(i)._gradient, 10, 2));
+    }
+    if (drag_mode == lineDrag) {
+        painter->setPen(QPen(Qt::black, 1));
+        painter->drawLine(shape_current_weight);
     }
 }

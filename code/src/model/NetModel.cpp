@@ -277,7 +277,7 @@ bool NetModel::backprop(int *step){
 
 bool NetModel::delete_weight(int id){
     //this->FNN->_weights.clear();
-    /*Weight w = this->FNN->atWeightID(id);
+    Weight w = this->FNN->atWeightID(id);
     Neuron src = this->FNN->atNeuronID(w._from);
     Neuron dst = this->FNN->atNeuronID(w._to);
     auto itor=this->FNN->_weights.begin();
@@ -297,7 +297,7 @@ bool NetModel::delete_weight(int id){
           this->FNN->_weights.erase(itor);
           return true;
         }
-    }*/
+    }
     return true;
 }
 

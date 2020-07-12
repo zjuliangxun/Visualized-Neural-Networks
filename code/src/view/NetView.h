@@ -55,7 +55,7 @@ public:
 
 	//retrun NOTIFICATION(IMPLEMENTED BY VIEW)
 	Notification tell_update_view_notification();
-    Notification tell_delete_weights_notification();
+    Notification tell_property_change_notification();
 
 private slots:
 	void select_button_clicked();
@@ -100,20 +100,19 @@ private:
 	EditMode edit_mode;
     DragMode drag_mode;
     Neuron current_neuron;
-    QVector<bool> selected_neurons;
+//    QVector<bool> selected_neurons;
     int selected_neuron;
     int selected_weight;
 
 	// shape of the Graph
     QVector<QRectF> shape_neurons;
+    QVector<int> neuron_ids;
     QRectF shape_current_neuron;
+
     QVector<QPair<int, int> > topology_weights;
     QVector<QLineF> shape_weights;
+    QVector<int> weight_ids;
     QLineF shape_current_weight;
-    //QVector<QGraphicsEllipseItem> shape_neurons;
-    //QGraphicsEllipseItem shape_current_neuron;
-    /*QVector<> shape_Weights*/
-
 
     // display modules
     Ui::NetView *ui;
@@ -123,6 +122,9 @@ private:
     // internal functions;
     void paintNeurons(QPainter*);
     void paintWeights(QPainter*);
+    void check_FNN();
+    void check_FNN_neurons();
+    void check_FNN_weights();
 
 protected:
 	void mousePressEvent(QMouseEvent*);
