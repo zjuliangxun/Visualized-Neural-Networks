@@ -307,4 +307,12 @@ bool NetModel::delete_neuron(int id){
     return true;
 }
 
+double NetModel::get_learning_rate(){
+    return this->learning_rate;
+}
+
+QString NetModel::get_loss_func(){
+    if(this->loss_func==lossL1) return "L1";
+    else return "L2";
+}
 

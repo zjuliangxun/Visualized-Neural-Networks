@@ -1,4 +1,5 @@
 #include "NetViewModel.h"
+#include <QString>
 
 NetViewModel::NetViewModel(): m_NetM(nullptr) {}
 
@@ -108,3 +109,11 @@ Command NetViewModel::get_delete_neuron_command(){
     };
 }
 
+Command NetViewModel::get_demand_config_command(){
+    return [this](std::any t)->bool{
+        QPair<double,QString>* g=std::any_cast<QPair<double,QString>*>(t);
+        g->first=this->m_NetM->get_learning_rate();
+        g->second=this->m_NetM->get_loss_func();
+        return true;
+    };
+}
