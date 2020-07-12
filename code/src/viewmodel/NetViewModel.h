@@ -28,7 +28,8 @@ public:
     Command get_backprop_command();
     Command get_delete_weight_command();
     Command get_delete_neuron_command();
-	//EXPOSE ATTR
+    Command get_demand_config_command();
+    //EXPOSE ATTR
     std::shared_ptr<Graph> get_FNN();
 
 	//SEND NOTIFICATIONS TO MODEL

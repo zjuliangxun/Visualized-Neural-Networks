@@ -43,6 +43,9 @@ public:
     bool delete_weight(int id);
     bool delete_neuron(int id);
 //	void move(int);
+
+    double get_learning_rate();
+    QString get_loss_func();
 };
 
 #endif // !MODEL_H
