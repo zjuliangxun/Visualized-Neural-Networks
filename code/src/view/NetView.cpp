@@ -89,9 +89,10 @@ NetView::NetView(QWidget* parent)
     connect(ui->actionGradient_propagate, SIGNAL(triggered()), this, SLOT(prop_gradient_clicked()));
     connect(ui->actionUpdate_weights, SIGNAL(triggered()), this, SLOT(update_weights_clicked()));
     connect(ui->actionRun_all, SIGNAL(triggered()), this, SLOT(backprop_clicked()));
-
+    connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(delete_button_clicked()));
     // initialize internal states
     selected_neuron = -1;
+    selected_weight = -1;
     edit_mode = selectNeuron;
     drag_mode = noDrag;
     neuronView = nullptr;
@@ -212,9 +213,12 @@ void NetView::paintNeurons(QPainter *painter)
 }
 void NetView::paintWeights(QPainter *painter)
 {
-    painter->setPen(QPen(Qt::black, 1));
     shape_weights.clear();
     for (int i = 0; i != topology_weights.size(); ++i) {
+
+        painter->setPen(QPen(Qt::black, 1));
+        if (FNN->_weights.at(i).id == selected_weight)
+            painter->setPen(QPen(Qt::black, 2));
         QPointF p1, p2;
         for (int j = 0; j != this->FNN->_neurons.size(); ++j) {
             if (this->FNN->_neurons.at(j).id == topology_weights.at(i).first)
@@ -244,8 +248,10 @@ void NetView::paintWeights(QPainter *painter)
                               + QString("/")
                               + QString::number(this->FNN->_weights.at(i)._gradient, 10, 2));
     }
-    if (drag_mode == lineDrag)
+    if (drag_mode == lineDrag) {
+        painter->setPen(QPen(Qt::black, 1));
         painter->drawLine(shape_current_weight);
+    }
 }
 
 /* Define Events */
@@ -269,12 +275,9 @@ void NetView::mousePressEvent(QMouseEvent *e)
     if (e->button() == Qt::LeftButton) {
         if (edit_mode == selectNeuron) {
             bool select_one = false;
+            // select neuron
             for (int i = 0; i != this->FNN->_neurons.size(); ++i) {
-                QPointF old_c = shape_neurons.at(i).center();
-                QPointF new_c(e->pos());
-                int dx = old_c.x() - new_c.x();
-                int dy = old_c.y() - new_c.y();
-                if (dx * dx + dy * dy <= _radius * _radius) {
+                if (isinside(e->pos(), shape_neurons.at(i), _radius)) {
                     if (selected_neuron == this->FNN->_neurons.at(i).id)
                         drag_mode = canDrag;
                     else
@@ -282,10 +285,19 @@ void NetView::mousePressEvent(QMouseEvent *e)
                     select_one = true;
                 }
             }
-            if (!select_one) {
-                drag_mode = noDrag;
-                selected_neuron = -1;
+            if (select_one)
+                return;
+            drag_mode = noDrag;
+            selected_neuron = -1;
+            // select weight
+            for (int i = 0; i != this->FNN->_weights.size(); ++i) {
+                if (nearline(e->pos(), shape_weights.at(i))) {
+                    selected_weight = this->FNN->_weights.at(i).id;
+                    select_one = true;
+                }
             }
+            if (!select_one)
+                selected_weight = -1;
         }
     }
     else if (e->button() == Qt::RightButton) {
@@ -298,6 +310,7 @@ void NetView::mousePressEvent(QMouseEvent *e)
                 }
                 shape_current_weight.setP2(e->pos());
             }
+            selected_weight = -1;
         }
     }
 
@@ -427,6 +440,7 @@ void NetView::mouseMoveEvent(QMouseEvent* e)
     update();
 }
 
+
 /* Binding Commands */
 void NetView::set_add_neuron_command(Command&& cmd) {
     this->add_neuron_command = cmd;
@@ -455,6 +469,13 @@ void NetView::set_update_weights_command(Command &&cmd) {
 void NetView::set_backprop_command(Command &&cmd) {
     this->backprop_command = cmd;
 }
+void NetView::set_delete_weight_command(Command &&cmd) {
+    this->delete_weight_command = cmd;
+}
+void NetView::set_delete_neuron_command(Command &&cmd) {
+    this->delete_neuron_command = cmd;
+}
+
 
 
 /* Binding Notifications */
@@ -476,6 +497,7 @@ void NetView::neuron_button_clicked()
     current_neuron.type = nNone;
     edit_mode = addNeuron;
     selected_neuron = -1;
+    selected_weight = -1;
     update();
 }
 void NetView::sigmoid_button_clicked()
@@ -483,6 +505,7 @@ void NetView::sigmoid_button_clicked()
     current_neuron.type = nSigmoid;
     edit_mode = addNeuron;
     selected_neuron = -1;
+    selected_weight = -1;
     update();
 }
 void NetView::relu_button_clicked()
@@ -490,6 +513,7 @@ void NetView::relu_button_clicked()
     current_neuron.type = nRelu;
     edit_mode = addNeuron;
     selected_neuron = -1;
+    selected_weight = -1;
     update();
 }
 void NetView::tanh_button_clicked()
@@ -497,6 +521,7 @@ void NetView::tanh_button_clicked()
     current_neuron.type = nTanh;
     edit_mode = addNeuron;
     selected_neuron = -1;
+    selected_weight = -1;
     update();
 }
 void NetView::target_button_clicked()
@@ -504,6 +529,7 @@ void NetView::target_button_clicked()
     current_neuron.type = nTarget;
     edit_mode = addNeuron;
     selected_neuron = -1;
+    selected_weight = -1;
     update();
 }
 void NetView::change_neuron_value(QPair<int, double> data)
@@ -569,5 +595,20 @@ void NetView::backprop_clicked()
     }
     else {
         /* check */
+    }
+}
+void NetView::delete_button_clicked()
+{
+    bool success = true;
+    if (selected_neuron != -1) {
+        success = delete_neuron_command(selected_neuron);
+    }
+    else if (selected_weight != -1) {
+        success = delete_weight_command(selected_weight);
+    }
+    if (success)
+        update();
+    else {
+        /**/
     }
 }
