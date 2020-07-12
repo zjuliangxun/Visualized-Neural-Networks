@@ -38,7 +38,6 @@ artifacts:
     name: $(releaseName)
 
 deploy:
-  release: Visualized Neural Networks
   provider: GitHub
   auth_token: $(GITHUB_OAUTH_TOKEN)
   description: "Visualized Neural Networks release version."
