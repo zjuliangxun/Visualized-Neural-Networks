@@ -276,8 +276,7 @@ bool NetModel::backprop(int *step){
 }
 
 bool NetModel::delete_weight(int id){
-    //this->FNN->_weights.clear();
-    /*Weight w = this->FNN->atWeightID(id);
+    Weight w = this->FNN->atWeightID(id);
     Neuron src = this->FNN->atNeuronID(w._from);
     Neuron dst = this->FNN->atNeuronID(w._to);
     auto itor=this->FNN->_weights.begin();
@@ -287,17 +286,33 @@ bool NetModel::delete_weight(int id){
           auto its=src.adjedge.begin();
           for(j=0;j<src.adjedge.size();j++){
               if(*its==id) src.adjedge.erase(its);
-              its++;
+              else its++;
           }
           auto itd=dst.rev_adjedge.begin();
           for(j=0;j<dst.rev_adjedge.size();j++){
               if(*itd==id) dst.rev_adjedge.erase(itd);
-              itd++;
+              else itd++;
           }
           this->FNN->_weights.erase(itor);
+          if(!dst.rev_adjedge.size()) dst.isleaf=nInput;
           return true;
         }
-    }*/
+    }
+    return false;
+}
+
+bool NetModel::delete_neuron(int id){
+    Neuron nro=this->FNN->atNeuronID(id);
+    auto it1=nro.adjedge.begin();
+    auto it2=nro.rev_adjedge.begin();
+    while(nro.adjedge.size()) delete_weight(*it1);
+    while(nro.rev_adjedge.size()) delete_weight(*it2);
+    auto it3=this->FNN->_neurons.begin();
+    int i;
+    for(i=0;i<this->FNN->_neurons.size();i++){
+        if(it3->id==id) this->FNN->_neurons.erase(it3);
+        else it3++;
+    }
     return true;
 }
 
