@@ -25,7 +25,7 @@ App::App()
 
 	// viewmodel
     viewmodel->AddNotification(view->tell_update_view_notification());//add notification
-    viewmodel->AddNotification(view->tell_update_view_notification());//add notification
+    viewmodel->AddNotification(view->tell_property_change_notification());//add notification
 
 	//model
     model->AddNotification(viewmodel->get_Notification());//add notification

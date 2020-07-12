@@ -139,6 +139,7 @@ void NetView::mousePressEvent(QMouseEvent *e)
             }
             if (!select_one)
                 selected_weight = -1;
+            update();
         }
     }
     else if (e->button() == Qt::RightButton) {
@@ -152,10 +153,9 @@ void NetView::mousePressEvent(QMouseEvent *e)
                 shape_current_weight.setP2(e->pos());
             }
             selected_weight = -1;
+            update();
         }
     }
-
-    update();
 }
 void NetView::mouseReleaseEvent(QMouseEvent* e)
 {
@@ -165,6 +165,7 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
                 if (this->FNN->_neurons.at(i).id == selected_neuron)
                     drag_mode = preDrag;
             }
+            update();
         }
         else if (edit_mode == addNeuron) {
             Neuron x;
@@ -185,6 +186,7 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
             if (add_success) {
                 shape_neurons.append(shape_x);
             }
+            update();
         }
     }
     else if (e->button() == Qt::RightButton) {
@@ -204,10 +206,9 @@ void NetView::mouseReleaseEvent(QMouseEvent* e)
             drag_mode = noDrag;
             shape_current_weight.setP1(e->pos());
             shape_current_weight.setP2(e->pos());
+            update();
         }
-
     }
-    update();
 }
 void NetView::mouseDoubleClickEvent(QMouseEvent* e)
 {
@@ -321,14 +322,17 @@ void NetView::set_delete_neuron_command(Command &&cmd) {
 
 /* Binding Notifications */
 Notification NetView::tell_update_view_notification() {
-    return [this](uint32_t) {
-        update();
+    return [this](uint32_t uID) {
+        if (uID == NOTIF_DRAW)
+            update();
 	};
 }
 Notification NetView::tell_property_change_notification() {
-    return [this](uint32_t) {
-        check_FNN();
-        update();
+    return [this](uint32_t uID) {
+        if (uID == NOTIF_CHANGE) {
+            check_FNN();
+//            update();
+        }
     };
 }
 
@@ -488,7 +492,7 @@ void NetView::check_FNN_neurons()
     for (auto p = this->FNN->_neurons.begin();
          p != this->FNN->_neurons.end(); ++p) {
         int id = p->id;
-        bool found;
+        bool found = false;
         for (auto iter = neuron_ids.begin();
              iter != neuron_ids.end(); ++iter) {
             if (id == *iter)
@@ -508,7 +512,7 @@ void NetView::check_FNN_weights()
     // check weights delete
     auto iter1 = topology_weights.begin();
     auto iter2 = weight_ids.begin();
-    while (iter1 != topology_weights.begin()) {
+    while (iter1 != topology_weights.end()) {
         int id = *iter2;
         bool found = false;
         for (auto p = this->FNN->_weights.begin();
@@ -528,7 +532,7 @@ void NetView::check_FNN_weights()
     for (auto p = this->FNN->_weights.begin();
          p != this->FNN->_weights.end(); ++p) {
         int id = p->id;
-        bool found;
+        bool found = false;
         for (auto iter = weight_ids.begin();
              iter != weight_ids.end(); ++iter) {
             if (id == *iter)

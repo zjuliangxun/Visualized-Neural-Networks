@@ -13,9 +13,16 @@ Notification  NetViewModel::get_Notification()
 	{
 		return [this](uint32_t uID)
 		{
-			if (uID == DRAW_NOTIF) {
-				this->Fire(uID);
-			}
+            switch (uID) {
+            case NOTIF_DRAW:
+                this->Fire(uID);
+                break;
+            case NOTIF_CHANGE:
+                this->Fire(uID);
+                break;
+            default:
+                break;
+            }
 		};
 	}
 
