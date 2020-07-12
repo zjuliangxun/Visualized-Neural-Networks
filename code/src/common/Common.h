@@ -6,7 +6,8 @@
 #include "./neurons.h"
 #include "./Graph.h"
 
-#define DRAW_NOTIF 0
+#define NOTIF_DRAW 10
+#define NOTIF_CHANGE 11
 
 using namespace std;
 

@@ -21,9 +21,12 @@ App::App()
     view->set_propagate_gradient_command(viewmodel->get_propagate_gradient_command());
     view->set_update_weights_command(viewmodel->get_update_weights_command());
     view->set_backprop_command(viewmodel->get_backprop_command());
+    view->set_delete_weight_command(viewmodel->get_delete_weight_command());
+    view->set_delete_neuron_command(viewmodel->get_delete_neuron_command());
 
 	// viewmodel
     viewmodel->AddNotification(view->tell_update_view_notification());//add notification
+    viewmodel->AddNotification(view->tell_property_change_notification());//add notification
 
 	//model
     model->AddNotification(viewmodel->get_Notification());//add notification

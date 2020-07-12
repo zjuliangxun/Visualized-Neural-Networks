@@ -32,6 +32,7 @@
     <property name="title">
      <string>编辑</string>
     </property>
+    <addaction name="actionDelete"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -94,6 +95,11 @@
   <action name="actionRun_all">
    <property name="text">
     <string>Run All</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
    </property>
   </action>
  </widget>

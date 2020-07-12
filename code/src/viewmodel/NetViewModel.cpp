@@ -13,9 +13,16 @@ Notification  NetViewModel::get_Notification()
 	{
 		return [this](uint32_t uID)
 		{
-			if (uID == DRAW_NOTIF) {
-				this->Fire(uID);
-			}
+            switch (uID) {
+            case NOTIF_DRAW:
+                this->Fire(uID);
+                break;
+            case NOTIF_CHANGE:
+                this->Fire(uID);
+                break;
+            default:
+                break;
+            }
 		};
 	}
 
@@ -87,5 +94,17 @@ Command NetViewModel::get_backprop_command(){
     };
 }
 
+Command NetViewModel::get_delete_weight_command(){
+    return [this](std::any t)->bool{
+        int g=std::any_cast<int>(t);
+        return this->m_NetM->delete_weight(g);
+    };
+}
 
+Command NetViewModel::get_delete_neuron_command(){
+    return [this](std::any t)->bool{
+        int g=std::any_cast<int>(t);
+        return this->m_NetM->delete_neuron(g);
+    };
+}
 
