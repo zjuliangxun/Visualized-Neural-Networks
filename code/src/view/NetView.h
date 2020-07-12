@@ -45,6 +45,9 @@ public:
     void set_update_weights_command(Command&&);
     void set_backprop_command(Command&&);
 
+    void set_delete_weight_command(Command&&);
+    void set_delete_neuron_command(Command&&);
+
 	//ATTACH DATA AND MODELS
     void set_FNN(std::shared_ptr<Graph>);
 	void attach_ViewModel(std::shared_ptr<NetViewModel> refModel) noexcept;
@@ -52,6 +55,7 @@ public:
 
 	//retrun NOTIFICATION(IMPLEMENTED BY VIEW)
 	Notification tell_update_view_notification();
+    Notification tell_delete_weights_notification();
 
 private slots:
 	void select_button_clicked();
@@ -66,6 +70,7 @@ private slots:
     void prop_gradient_clicked();
     void update_weights_clicked();
     void backprop_clicked();
+    void delete_button_clicked();
 
     void change_neuron_value(QPair<int, double>);
     void change_weight_value(QPair<int, double>);
@@ -88,12 +93,16 @@ private:
     Command update_weights_command;
     Command backprop_command;
 
+    Command delete_weight_command;
+    Command delete_neuron_command;
+
 	// edit state
 	EditMode edit_mode;
     DragMode drag_mode;
     Neuron current_neuron;
     QVector<bool> selected_neurons;
     int selected_neuron;
+    int selected_weight;
 
 	// shape of the Graph
     QVector<QRectF> shape_neurons;
