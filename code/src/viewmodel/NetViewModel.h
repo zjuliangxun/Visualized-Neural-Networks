@@ -27,7 +27,7 @@ public:
     Command get_update_weights_command();
     Command get_backprop_command();
     Command get_delete_weight_command();
-
+    Command get_delete_neurons_command();
 	//EXPOSE ATTR
     std::shared_ptr<Graph> get_FNN();
 
