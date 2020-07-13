@@ -84,7 +84,7 @@ bool NetModel::change_neruo(int id, double value){
     return true;
 }
 bool NetModel::change_neruo_type(int id, NeuronType tp) {
-    if (tp != nTarget) {
+    if (tp != nTarget && this->FNN->atNeuronID(id).type != nTarget) {
         this->FNN->atNeuronID(id).type = tp;
         return true;
     }
