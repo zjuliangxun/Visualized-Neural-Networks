@@ -83,6 +83,13 @@ bool NetModel::change_neruo(int id, double value){
     this->Fire(NOTIF_DRAW);
     return true;
 }
+bool NetModel::change_neruo_type(int id, NeuronType tp) {
+    if (tp != nTarget) {
+        this->FNN->atNeuronID(id).type = tp;
+        return true;
+    }
+    return false;
+}
 
 bool NetModel::change_weight(int id, double value){
     this->FNN->atWeightID(id)._weight=value;
@@ -307,4 +314,22 @@ bool NetModel::delete_neuron(int id){
     return true;
 }
 
+bool NetModel::change_learning_rate(double x)
+{
+    this->learning_rate = x;
+    return true;
+}
+bool NetModel::change_loss(LossFunc func)
+{
+    this->loss_func = func;
+    return true;
+}
+double NetModel::get_learning_rate(){
+    return this->learning_rate;
+}
+
+QString NetModel::get_loss_func(){
+    if(this->loss_func==lossL1) return "L1";
+    else return "L2";
+}
 

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Tutorial</class>
+ <widget class="QWidget" name="Tutorial">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>570</width>
+    <height>398</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>说明</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>19</y>
+     <width>491</width>
+     <height>251</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>操作说明
+
+选择模式：
+	左键选中神经元或连接；
+	按住左键移动可拖动神经元移动；
+	按住右键移动可拉出直线，在另一神经元处松开右键可建立连接；
+	选择神经元或连接时点击&quot;编辑-Delete&quot;键
+	或按键盘Del键可删除神经元或连接。
+
+添加模式：
+	点击&quot;编辑-Add&quot;栏中按钮或工具栏图标可选择神经元，
+	鼠标左键点击放置。</string>
+   </property>
+   <property name="openExternalLinks">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>300</y>
+     <width>221</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>进一步详细说明见&lt;a href=&quot;https://github.com/smileandyxu/Visualized-Neural-Networks/blob/master/doc/document.md&quot;&gt;说明文档</string>
+   </property>
+   <property name="openExternalLinks">
+    <bool>true</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

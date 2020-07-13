@@ -65,6 +65,18 @@ NetView::NetView(QWidget* parent)
     connect(ui->actionUpdate_weights, SIGNAL(triggered()), this, SLOT(update_weights_clicked()));
     connect(ui->actionRun_all, SIGNAL(triggered()), this, SLOT(backprop_clicked()));
     connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(delete_button_clicked()));
+    connect(ui->actionConfigure, SIGNAL(triggered()), this, SLOT(enter_config()));
+
+    connect(ui->actionExit, SIGNAL(triggered()), this, SLOT(exit_clicked()));
+    connect(ui->actionPlain_Neuron, SIGNAL(triggered()), this, SLOT(neuron_button_clicked()));
+    connect(ui->actionSigmoid_Neuron, SIGNAL(triggered()), this, SLOT(sigmoid_button_clicked()));
+    connect(ui->actionRelu_Neuron, SIGNAL(triggered()), this, SLOT(relu_button_clicked()));
+    connect(ui->actionTanh_Neuron, SIGNAL(triggered()), this, SLOT(tanh_button_clicked()));
+    connect(ui->actionTarget, SIGNAL(triggered()), this, SLOT(target_button_clicked()));
+    connect(ui->actionIterate, SIGNAL(triggered()), this, SLOT(iterate_clicked()));
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about_clicked()));
+    connect(ui->actionTutorial, SIGNAL(triggered()), this, SLOT(tutorial_clicked()));
+
     // initialize internal states
     selected_neuron = -1;
     selected_weight = -1;
@@ -72,6 +84,7 @@ NetView::NetView(QWidget* parent)
     drag_mode = noDrag;
     neuronView = nullptr;
     weightView = nullptr;
+    configView = nullptr;
 }
 
 NetView::~NetView()
@@ -217,13 +230,17 @@ void NetView::mouseDoubleClickEvent(QMouseEvent* e)
         if (isinside(e->pos(), shape_neurons.at(i))) {
             neuronView = new NeuronView(this);
             connect(neuronView,
-                    SIGNAL(sendData(QPair<int, double>)),
+                    SIGNAL(sendData(QPair<QPair<int, double>, NeuronType>)),
                     this,
-                    SLOT(change_neuron_value(QPair<int, double>)));
+                    SLOT(change_neuron_value(QPair<QPair<int, double>, NeuronType>)));
             if (this->FNN->_neurons.at(i).type == nTarget)
-                neuronView->setValue(this->FNN->_neurons.at(i)._targetvalue);
+                neuronView->setValue(
+                            this->FNN->_neurons.at(i)._targetvalue,
+                            this->FNN->_neurons.at(i).type);
             else
-                neuronView->setValue(this->FNN->_neurons.at(i)._value);
+                neuronView->setValue(
+                            this->FNN->_neurons.at(i)._value,
+                            this->FNN->_neurons.at(i).type);
             neuronView->setID(this->FNN->_neurons.at(i).id);
             if (neuronView->exec() == QDialog::Accepted) {
                 update();
@@ -285,37 +302,47 @@ void NetView::mouseMoveEvent(QMouseEvent* e)
 
 /* Binding Commands */
 void NetView::set_add_neuron_command(Command&& cmd) {
-    this->add_neuron_command = cmd;
+    this->add_neuron_command = std::move(cmd);
 }
 void NetView::set_connect_command(Command&& cmd) {
-    this->connect_command = cmd;
+    this->connect_command = std::move(cmd);
 }
 void NetView::set_change_neuron_command(Command &&cmd) {
-    this->change_neuron_command = cmd;
+    this->change_neuron_command = std::move(cmd);
 }
 void NetView::set_change_weight_command(Command &&cmd) {
-    this->change_weight_command = cmd;
+    this->change_weight_command = std::move(cmd);
 }
 void NetView::set_calculate_forward_command(Command &&cmd) {
-    this->calculate_forward_command = cmd;
+    this->calculate_forward_command = std::move(cmd);
 }
 void NetView::set_calculate_gradient_command(Command &&cmd) {
-    this->calculate_gradient_command = cmd;
+    this->calculate_gradient_command = std::move(cmd);
 }
 void NetView::set_propagate_gradient_command(Command &&cmd) {
-    this->propagate_gradient_command = cmd;
+    this->propagate_gradient_command = std::move(cmd);
 }
 void NetView::set_update_weights_command(Command &&cmd) {
-    this->update_weights_command = cmd;
+    this->update_weights_command = std::move(cmd);
 }
 void NetView::set_backprop_command(Command &&cmd) {
-    this->backprop_command = cmd;
+    this->backprop_command = std::move(cmd);
 }
 void NetView::set_delete_weight_command(Command &&cmd) {
-    this->delete_weight_command = cmd;
+    this->delete_weight_command = std::move(cmd);
 }
 void NetView::set_delete_neuron_command(Command &&cmd) {
-    this->delete_neuron_command = cmd;
+    this->delete_neuron_command = std::move(cmd);
+}
+void NetView::set_change_learning_rate_command(Command &&cmd) {
+    this->change_learning_rate_command = std::move(cmd);
+}
+void NetView::set_change_loss_command(Command &&cmd) {
+    this->change_loss_command = std::move(cmd);
+}
+void NetView::set_demand_config_command(Command &&cmd)
+{
+    this->demand_config_command = std::move(cmd);
 }
 
 
@@ -383,13 +410,26 @@ void NetView::target_button_clicked()
     selected_weight = -1;
     update();
 }
-void NetView::change_neuron_value(QPair<int, double> data)
+void NetView::change_neuron_value(QPair<QPair<int, double>, NeuronType> data)
 {
     change_neuron_command(data);    // now no failure dealing
 }
 void NetView::change_weight_value(QPair<int, double> data)
 {
     change_weight_command(data);
+}
+void NetView::change_learning_rate(double x)
+{
+    change_learning_rate_command(x);
+}
+void NetView::change_loss(QString s)
+{
+    change_loss_command(s);
+}
+void NetView::change_config(QPair<double, QString> config)
+{
+    change_learning_rate(config.first);
+    change_loss(config.second);
 }
 
 /* Menu Reaction */
@@ -464,6 +504,44 @@ void NetView::delete_button_clicked()
     else {
         /**/
     }
+}
+void NetView::enter_config()
+{
+    configView = new ConfigView;
+    connect(configView,
+            SIGNAL(sendData(QPair<double, QString>)),
+            this,
+            SLOT(change_config(QPair<double, QString>)));
+    QPair<double, QString> current_config;
+    demand_config_command(&current_config);
+    configView->setValue(current_config.first, current_config.second);
+    if (configView->exec() == QDialog::Accepted) {
+        update();
+    }
+    else {
+        /* error */
+    }
+}
+void NetView::exit_clicked()
+{
+    this->close();
+}
+void NetView::iterate_clicked()
+{
+    calc_forward_clicked();
+    calc_gradient_clicked();
+    prop_gradient_clicked();
+    update_weights_clicked();
+}
+void NetView::about_clicked()
+{
+    aboutView = new About;
+    aboutView->show();
+}
+void NetView::tutorial_clicked()
+{
+    tutorialView = new Tutorial;
+    tutorialView->show();
 }
 
 /* Internal Functions */

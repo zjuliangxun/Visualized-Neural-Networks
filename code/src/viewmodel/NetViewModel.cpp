@@ -1,4 +1,5 @@
 #include "NetViewModel.h"
+#include <QString>
 
 NetViewModel::NetViewModel(): m_NetM(nullptr) {}
 
@@ -53,8 +54,14 @@ Command NetViewModel::get_connect_command(){
 
 Command NetViewModel::get_change_neuron_command(){
     return [this](std::any t)->bool{
-        QPair<int,double> g=std::any_cast<QPair<int,double>>(t);
-        return this->m_NetM->change_neruo(g.first,g.second);
+        QPair<QPair<int, double>, NeuronType> g
+                = std::any_cast<QPair<QPair<int, double>, NeuronType> >(t);
+        QPair<int, double> value(g.first);
+        NeuronType tp(g.second);
+        bool success = (tp != nTarget);
+        success &= this->m_NetM->change_neruo(value.first,value.second);
+        success &= this->m_NetM->change_neruo_type(value.first, tp);
+        return success;
     };
 }
 
@@ -108,3 +115,30 @@ Command NetViewModel::get_delete_neuron_command(){
     };
 }
 
+Command NetViewModel::get_demand_config_command(){
+    return [this](std::any t)->bool{
+        QPair<double,QString>* g=std::any_cast<QPair<double,QString>*>(t);
+        g->first=this->m_NetM->get_learning_rate();
+        g->second=this->m_NetM->get_loss_func();
+        return true;
+    };
+}
+
+Command NetViewModel::get_change_learning_rate_command() {
+    return [this](std::any t)->bool {
+        double x = std::any_cast<double>(t);
+        return this->m_NetM->change_learning_rate(x);
+    };
+}
+
+Command NetViewModel::get_change_loss_command() {
+    return [this](std::any t)->bool {
+        QString s = std::any_cast<QString>(t);
+        LossFunc f = lossL2;
+        if (s == "L1")
+            f = lossL1;
+        if (s == "L2")
+            f = lossL2;
+        return this->m_NetM->change_loss(f);
+    };
+}

@@ -5,6 +5,7 @@
 
 #include <QWidget>
 #include "ui_NeuronView.h"
+#include "../common/neurons.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class NeuronView; }
@@ -14,15 +15,17 @@ class NeuronView : public QDialog {
     Q_OBJECT
 
 signals:
-    void sendData(QPair<int, double>);
+    void sendData(QPair<QPair<int, double>, NeuronType>);
 
 public:
     explicit NeuronView(QWidget* parent = nullptr);
     ~NeuronView();
 
-    void setValue(double);
+    void setValue(double, NeuronType);
     void setID(int);
     QPair<int, double> getValue();
+    NeuronType getType();
+    QPair<QPair<int, double>, NeuronType> getData();
 
 public slots:
     void saveData();

@@ -32,6 +32,7 @@ public:
     bool add_neuron(Neuron&&);
     bool add_link(int src,int dst);
     bool change_neruo(int id, double value);
+    bool change_neruo_type(int id, NeuronType tp);
     bool change_weight(int id, double value);
     //estimate whether there exist circle
     bool estimate_circle(int src, int dst);
@@ -43,6 +44,11 @@ public:
     bool delete_weight(int id);
     bool delete_neuron(int id);
 //	void move(int);
+    bool change_learning_rate(double);
+    bool change_loss(LossFunc);
+
+    double get_learning_rate();
+    QString get_loss_func();
 };
 
 #endif // !MODEL_H

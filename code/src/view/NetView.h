@@ -8,11 +8,13 @@
 #include <QtWidgets/QTextEdit>
 #include <QVector>
 #include <QPair>
-#include <QGraphicsItem>
 #include "../viewmodel/NetViewModel.h"
 #include "../common/Common.h"
 #include "NeuronView.h"
 #include "WeightView.h"
+#include "ConfigView.h"
+#include "AboutView.h"
+#include "TutorialView.h"
 
 enum EditMode {
 	selectNeuron, addNeuron, addWeight
@@ -48,6 +50,10 @@ public:
     void set_delete_weight_command(Command&&);
     void set_delete_neuron_command(Command&&);
 
+    void set_change_learning_rate_command(Command&&);
+    void set_change_loss_command(Command&&);
+    void set_demand_config_command(Command&&);
+
 	//ATTACH DATA AND MODELS
     void set_FNN(std::shared_ptr<Graph>);
 	void attach_ViewModel(std::shared_ptr<NetViewModel> refModel) noexcept;
@@ -72,8 +78,18 @@ private slots:
     void backprop_clicked();
     void delete_button_clicked();
 
-    void change_neuron_value(QPair<int, double>);
+    void change_neuron_value(QPair<QPair<int, double>, NeuronType>);
     void change_weight_value(QPair<int, double>);
+    void change_learning_rate(double);
+    void change_loss(QString);
+    void enter_config();
+    void change_config(QPair<double, QString>);
+
+    void exit_clicked();
+    void iterate_clicked();
+    void about_clicked();
+    void tutorial_clicked();
+
 
 private:
 	/*Ui::View *ui;*/
@@ -95,6 +111,11 @@ private:
 
     Command delete_weight_command;
     Command delete_neuron_command;
+
+    Command change_learning_rate_command;
+    Command change_loss_command;
+
+    Command demand_config_command;
 
 	// edit state
 	EditMode edit_mode;
@@ -118,6 +139,9 @@ private:
     Ui::NetView *ui;
     NeuronView *neuronView;
     WeightView *weightView;
+    ConfigView *configView;
+    About *aboutView;
+    Tutorial *tutorialView;
 
     // internal functions;
     void paintNeurons(QPainter*);

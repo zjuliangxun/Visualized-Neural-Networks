@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>NeuronView</class>
- <widget class="QDialog" name="NeuronView">
-  <property name="windowModality">
-   <enum>Qt::NonModal</enum>
-  </property>
+ <class>ConfigView</class>
+ <widget class="QDialog" name="ConfigView">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>570</width>
-    <height>380</height>
+    <width>600</width>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>神经元编辑</string>
+   <string>设置</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -22,8 +19,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>310</y>
+     <x>210</x>
+     <y>320</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -32,77 +29,63 @@
     <enum>Qt::Horizontal</enum>
    </property>
    <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="lineEdit">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>180</y>
-     <width>113</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="whatsThis">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter a real number as the value of this input neuron.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>180</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>输入值(浮点数):
-(-99.99,99.99)</string>
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
    </property>
   </widget>
   <widget class="QComboBox" name="comboBox">
    <property name="geometry">
     <rect>
      <x>270</x>
-     <y>120</y>
-     <width>87</width>
+     <y>190</y>
+     <width>131</width>
      <height>22</height>
     </rect>
    </property>
    <item>
     <property name="text">
-     <string>None</string>
+     <string>平方误差函数</string>
     </property>
    </item>
    <item>
     <property name="text">
-     <string>Sigmoid</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Relu</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string>Tanh</string>
+     <string>绝对值误差函数</string>
     </property>
    </item>
   </widget>
-  <widget class="QLabel" name="label_2">
+  <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>160</x>
+     <x>200</x>
      <y>120</y>
      <width>72</width>
      <height>15</height>
     </rect>
    </property>
    <property name="text">
-    <string>激活函数：</string>
+    <string>学习率：</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>270</x>
+     <y>120</y>
+     <width>113</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>190</y>
+     <width>72</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>误差函数：</string>
    </property>
   </widget>
  </widget>
@@ -111,7 +94,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>NeuronView</receiver>
+   <receiver>ConfigView</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -127,7 +110,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>NeuronView</receiver>
+   <receiver>ConfigView</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
