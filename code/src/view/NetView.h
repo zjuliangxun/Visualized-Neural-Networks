@@ -77,7 +77,7 @@ private slots:
     void backprop_clicked();
     void delete_button_clicked();
 
-    void change_neuron_value(QPair<int, double>);
+    void change_neuron_value(QPair<QPair<int, double>, NeuronType>);
     void change_weight_value(QPair<int, double>);
     void change_learning_rate(double);
     void change_loss(QString);

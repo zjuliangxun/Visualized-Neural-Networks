@@ -83,6 +83,13 @@ bool NetModel::change_neruo(int id, double value){
     this->Fire(NOTIF_DRAW);
     return true;
 }
+bool NetModel::change_neruo_type(int id, NeuronType tp) {
+    if (tp != nTarget) {
+        this->FNN->atNeuronID(id).type = tp;
+        return true;
+    }
+    return false;
+}
 
 bool NetModel::change_weight(int id, double value){
     this->FNN->atWeightID(id)._weight=value;

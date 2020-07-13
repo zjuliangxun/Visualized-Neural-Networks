@@ -54,8 +54,14 @@ Command NetViewModel::get_connect_command(){
 
 Command NetViewModel::get_change_neuron_command(){
     return [this](std::any t)->bool{
-        QPair<int,double> g=std::any_cast<QPair<int,double>>(t);
-        return this->m_NetM->change_neruo(g.first,g.second);
+        QPair<QPair<int, double>, NeuronType> g
+                = std::any_cast<QPair<QPair<int, double>, NeuronType> >(t);
+        QPair<int, double> value(g.first);
+        NeuronType tp(g.second);
+        bool success = (tp != nTarget);
+        success &= this->m_NetM->change_neruo(value.first,value.second);
+        success &= this->m_NetM->change_neruo_type(value.first, tp);
+        return success;
     };
 }
 

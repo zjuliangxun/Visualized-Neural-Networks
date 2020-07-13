@@ -32,6 +32,7 @@ public:
     bool add_neuron(Neuron&&);
     bool add_link(int src,int dst);
     bool change_neruo(int id, double value);
+    bool change_neruo_type(int id, NeuronType tp);
     bool change_weight(int id, double value);
     //estimate whether there exist circle
     bool estimate_circle(int src, int dst);

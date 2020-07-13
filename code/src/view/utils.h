@@ -4,6 +4,8 @@
 #define UTILS_H
 
 #include <QRectF>
+#include <QLine>
+#include <QtMath>
 #include <cmath>
 
 /* Auxiliary Functions */

@@ -228,13 +228,17 @@ void NetView::mouseDoubleClickEvent(QMouseEvent* e)
         if (isinside(e->pos(), shape_neurons.at(i))) {
             neuronView = new NeuronView(this);
             connect(neuronView,
-                    SIGNAL(sendData(QPair<int, double>)),
+                    SIGNAL(sendData(QPair<QPair<int, double>, NeuronType>)),
                     this,
-                    SLOT(change_neuron_value(QPair<int, double>)));
+                    SLOT(change_neuron_value(QPair<QPair<int, double>, NeuronType>)));
             if (this->FNN->_neurons.at(i).type == nTarget)
-                neuronView->setValue(this->FNN->_neurons.at(i)._targetvalue);
+                neuronView->setValue(
+                            this->FNN->_neurons.at(i)._targetvalue,
+                            this->FNN->_neurons.at(i).type);
             else
-                neuronView->setValue(this->FNN->_neurons.at(i)._value);
+                neuronView->setValue(
+                            this->FNN->_neurons.at(i)._value,
+                            this->FNN->_neurons.at(i).type);
             neuronView->setID(this->FNN->_neurons.at(i).id);
             if (neuronView->exec() == QDialog::Accepted) {
                 update();
@@ -404,7 +408,7 @@ void NetView::target_button_clicked()
     selected_weight = -1;
     update();
 }
-void NetView::change_neuron_value(QPair<int, double> data)
+void NetView::change_neuron_value(QPair<QPair<int, double>, NeuronType> data)
 {
     change_neuron_command(data);    // now no failure dealing
 }
