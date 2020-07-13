@@ -8,12 +8,13 @@
 #include <QtWidgets/QTextEdit>
 #include <QVector>
 #include <QPair>
-#include <QGraphicsItem>
 #include "../viewmodel/NetViewModel.h"
 #include "../common/Common.h"
 #include "NeuronView.h"
 #include "WeightView.h"
 #include "ConfigView.h"
+#include "AboutView.h"
+#include "TutorialView.h"
 
 enum EditMode {
 	selectNeuron, addNeuron, addWeight
@@ -86,6 +87,8 @@ private slots:
 
     void exit_clicked();
     void iterate_clicked();
+    void about_clicked();
+    void tutorial_clicked();
 
 
 private:
@@ -137,6 +140,8 @@ private:
     NeuronView *neuronView;
     WeightView *weightView;
     ConfigView *configView;
+    About *aboutView;
+    Tutorial *tutorialView;
 
     // internal functions;
     void paintNeurons(QPainter*);

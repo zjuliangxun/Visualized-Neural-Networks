@@ -72,9 +72,9 @@
     <property name="title">
      <string>帮助</string>
     </property>
-    <addaction name="actionAbout_2"/>
+    <addaction name="actionTutorial"/>
     <addaction name="separator"/>
-    <addaction name="actionAbout_3"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -85,16 +85,6 @@
   <action name="actionForward">
    <property name="text">
     <string>Forward</string>
-   </property>
-  </action>
-  <action name="actionManual">
-   <property name="text">
-    <string>Manual</string>
-   </property>
-  </action>
-  <action name="actionAbout">
-   <property name="text">
-    <string>About</string>
    </property>
   </action>
   <action name="actionGradient_calculate">
@@ -155,12 +145,12 @@
     <string>Iterate</string>
    </property>
   </action>
-  <action name="actionAbout_2">
+  <action name="actionTutorial">
    <property name="text">
     <string>Tutorial</string>
    </property>
   </action>
-  <action name="actionAbout_3">
+  <action name="actionAbout">
    <property name="text">
     <string>About</string>
    </property>

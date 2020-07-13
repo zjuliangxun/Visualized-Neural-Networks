@@ -74,6 +74,8 @@ NetView::NetView(QWidget* parent)
     connect(ui->actionTanh_Neuron, SIGNAL(triggered()), this, SLOT(tanh_button_clicked()));
     connect(ui->actionTarget, SIGNAL(triggered()), this, SLOT(target_button_clicked()));
     connect(ui->actionIterate, SIGNAL(triggered()), this, SLOT(iterate_clicked()));
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about_clicked()));
+    connect(ui->actionTutorial, SIGNAL(triggered()), this, SLOT(tutorial_clicked()));
 
     // initialize internal states
     selected_neuron = -1;
@@ -530,6 +532,16 @@ void NetView::iterate_clicked()
     calc_gradient_clicked();
     prop_gradient_clicked();
     update_weights_clicked();
+}
+void NetView::about_clicked()
+{
+    aboutView = new About;
+    aboutView->show();
+}
+void NetView::tutorial_clicked()
+{
+    tutorialView = new Tutorial;
+    tutorialView->show();
 }
 
 /* Internal Functions */
