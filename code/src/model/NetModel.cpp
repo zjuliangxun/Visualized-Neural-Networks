@@ -1,6 +1,5 @@
 #include <stack>
-#include <queue>
-#include <map>
+#include <cmath>
 #include "NetModel.h"
 #include "math_utils.h"
 
@@ -8,12 +7,6 @@ NetModel::NetModel(){
     this->FNN=make_shared<Graph>();
     this->loss_func = lossL2;
     this->learning_rate = 0.1;
-}
-
-std::function<bool(Neuron&&)> NetModel::get_add_neuron_command() {
-    return [this](Neuron&& x)->bool {
-        return this->add_neuron(std::move(x));
-    };
 }
 
 std::shared_ptr<Graph> NetModel::get_FNN()
@@ -34,12 +27,6 @@ bool NetModel::add_neuron(Neuron&& x)
         this->Fire(NOTIF_CHANGE);
     }
     return success;
-}
-
-std::function<bool(int,int)>  NetModel::get_connect_command(){
-    return [this](int a,int b)->bool{
-        return add_link(a,b);
-    };
 }
 
 bool NetModel::add_link(int src,int dst){

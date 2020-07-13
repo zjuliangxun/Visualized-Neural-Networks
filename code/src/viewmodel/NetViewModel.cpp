@@ -6,7 +6,7 @@ NetViewModel::NetViewModel(): m_NetM(nullptr) {}
 Command NetViewModel::get_add_neuron_command() {
     return [this](std::any&& x)->bool {
         Neuron&& y = std::any_cast<Neuron>(x);
-        return this->m_NetM->get_add_neuron_command()(std::move(y));
+        return this->m_NetM->add_neuron(std::move(y));
     };
 }
 

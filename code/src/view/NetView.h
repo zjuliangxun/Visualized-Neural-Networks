@@ -8,7 +8,6 @@
 #include <QtWidgets/QTextEdit>
 #include <QVector>
 #include <QPair>
-#include "../viewmodel/NetViewModel.h"
 #include "../common/Common.h"
 #include "NeuronView.h"
 #include "WeightView.h"
@@ -56,8 +55,6 @@ public:
 
 	//ATTACH DATA AND MODELS
     void set_FNN(std::shared_ptr<Graph>);
-	void attach_ViewModel(std::shared_ptr<NetViewModel> refModel) noexcept;
-	std::shared_ptr <NetViewModel > detach_ViewModel() noexcept;
 
 	//retrun NOTIFICATION(IMPLEMENTED BY VIEW)
 	Notification tell_update_view_notification();
@@ -94,8 +91,7 @@ private slots:
 private:
 	/*Ui::View *ui;*/
 	//MODELS AND DATA BIND
-	std::shared_ptr<Graph> FNN;
-	std::shared_ptr<NetViewModel> m_NetVM;
+    std::shared_ptr<Graph> FNN;
 
     //COMMANDS
     Command add_neuron_command;

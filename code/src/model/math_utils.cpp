@@ -9,9 +9,9 @@ double dsigmod(double v){
     return v*(1-v);
 }
 
-double tanh(double x){
-        return (exp(x) - exp(-x)) / (exp(x) + exp(-x));
-}
+//double tanh(double x){
+//    return (exp(x) - exp(-x)) / (exp(x) + exp(-x));
+//}
 double dtanh(double outx){
 //        double tanh = (exp(outx) - exp(-outx)) / (exp(outx) + exp(-outx));
         return 1 - pow(outx, 2);

@@ -1,4 +1,7 @@
 #include <QPair>
+#include <QToolBar>
+#include <QPainter>
+#include <QMouseEvent>
 #include <cmath>
 
 #include "NetView.h"
@@ -103,12 +106,7 @@ void NetView::set_FNN(std::shared_ptr<Graph> pFNN)
         weight_ids.append(pFNN->_neurons.at(i).id);
     }
 }
-void NetView::attach_ViewModel(std::shared_ptr <NetViewModel > refModel) noexcept {
-	this->m_NetVM = refModel;
-}
-std::shared_ptr <NetViewModel > NetView::detach_ViewModel() noexcept {
-	return std::shared_ptr <NetViewModel >(std::move(m_NetVM));
-}
+
 
 /* Define Events */
 void NetView::paintEvent(QPaintEvent*)

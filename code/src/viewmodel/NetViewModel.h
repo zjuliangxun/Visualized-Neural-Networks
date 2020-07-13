@@ -1,10 +1,7 @@
 #ifndef NETVIEWMODEL_H
 #define NETVIEWMODEL_H
 
-#include <QtWidgets/QtWidgets>
 #include <memory>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QTextEdit>
 #include <QtCore/QVector>
 #include "../common/Common.h"
 #include"../model/NetModel.h"

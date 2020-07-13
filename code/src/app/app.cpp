@@ -7,7 +7,6 @@ App::App()
     view =make_shared<NetView >();
 
     viewmodel->attach_Model(this->model);//bind model
-    view->attach_ViewModel(this->viewmodel);
 
 	//bind view
     view->set_FNN(viewmodel->get_FNN());
