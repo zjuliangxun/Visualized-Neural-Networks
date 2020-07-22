@@ -27,21 +27,54 @@
     <property name="title">
      <string>文件</string>
     </property>
+    <addaction name="actionConfigure"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
      <string>编辑</string>
     </property>
+    <widget class="QMenu" name="menuAdd_2">
+     <property name="title">
+      <string>Add</string>
+     </property>
+     <addaction name="actionPlain_Neuron"/>
+     <addaction name="actionSigmoid_Neuron"/>
+     <addaction name="actionRelu_Neuron"/>
+     <addaction name="actionTanh_Neuron"/>
+     <addaction name="actionTarget"/>
+    </widget>
+    <addaction name="actionDelete"/>
+    <addaction name="separator"/>
+    <addaction name="menuAdd_2"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
      <string>计算</string>
     </property>
+    <widget class="QMenu" name="menuBackpropagation">
+     <property name="title">
+      <string>Backpropagation</string>
+     </property>
+     <addaction name="actionRun_all"/>
+     <addaction name="separator"/>
+     <addaction name="actionGradient_calculate"/>
+     <addaction name="actionGradient_propagate"/>
+     <addaction name="actionUpdate_weights"/>
+    </widget>
+    <addaction name="actionForward"/>
+    <addaction name="menuBackpropagation"/>
+    <addaction name="separator"/>
+    <addaction name="actionIterate"/>
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
      <string>帮助</string>
     </property>
+    <addaction name="actionTutorial"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -49,6 +82,89 @@
    <addaction name="menu_4"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionForward">
+   <property name="text">
+    <string>Forward</string>
+   </property>
+  </action>
+  <action name="actionGradient_calculate">
+   <property name="text">
+    <string>Gradient Calculate</string>
+   </property>
+  </action>
+  <action name="actionGradient_propagate">
+   <property name="text">
+    <string>Gradient Propagate</string>
+   </property>
+  </action>
+  <action name="actionUpdate_weights">
+   <property name="text">
+    <string>Update Weights</string>
+   </property>
+  </action>
+  <action name="actionRun_all">
+   <property name="text">
+    <string>Run All</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actionConfigure">
+   <property name="text">
+    <string>Configure</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionSigmoid_Neuron">
+   <property name="text">
+    <string>Sigmoid</string>
+   </property>
+  </action>
+  <action name="actionRelu_Neuron">
+   <property name="text">
+    <string>Relu</string>
+   </property>
+  </action>
+  <action name="actionTanh_Neuron">
+   <property name="text">
+    <string>Tanh</string>
+   </property>
+  </action>
+  <action name="actionIterate">
+   <property name="text">
+    <string>Iterate</string>
+   </property>
+  </action>
+  <action name="actionTutorial">
+   <property name="text">
+    <string>Tutorial</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionPlain_Neuron">
+   <property name="text">
+    <string>Plain Neuron</string>
+   </property>
+  </action>
+  <action name="actionTarget">
+   <property name="text">
+    <string>Target</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

@@ -4,6 +4,7 @@
 #define WEIGHTVIEW_H
 
 #include <QWidget>
+#include <QDoubleValidator>
 #include "ui_WeightView.h"
 
 QT_BEGIN_NAMESPACE
